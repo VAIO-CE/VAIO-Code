@@ -1,46 +1,82 @@
+# Library README
 
-This directory is intended for project specific (private) libraries.
-PlatformIO will compile them to static libraries and link into executable file.
+This library provides a set of functions and classes for controlling and interacting with various components of a robotic system. The library is designed to be used with the Arduino platform and is compatible with the ESP32 microcontroller.
 
-The source code of each library should be placed in an own separate directory
-("lib/your_library_name/[here are source files]").
+## Necessary Files
 
-For example, see a structure of the following two libraries `Foo` and `Bar`:
+The following files are necessary for the proper functioning of the library:
+
+- `auto_control.h`: This file contains the declaration of the `AutoControl` class, which provides methods for controlling the robot's movement, including moving forward, backward, turning, and stopping.
+- `auto_control.cpp`: This file contains the implementation of the `AutoControl` class methods.
+- `setup.h`: This file contains the declaration of the `Setup` class, which provides methods for initializing and setting up the robot's components, including the motors, ultrasonic sensor, and servo.
+- `setup.cpp`: This file contains the implementation of the `Setup` class methods.
+- `gyro_control.h`: This file contains the declaration of the `GyroControl` class, which provides methods for controlling the robot's movement based on gyro sensor data.
+- `gyro_control.cpp`: This file contains the implementation of the `GyroControl` class methods.
+- `constants.h`: This file contains definitions for various constants used throughout the library, including signal timeout, sound speed, and motor speed.
+- `pin.h`: This file contains definitions for the pin assignments used by the library.
+
+## Tree View
 
 |--lib
-|  |
-|  |--Bar
-|  |  |--docs
-|  |  |--examples
-|  |  |--src
-|  |     |- Bar.c
-|  |     |- Bar.h
-|  |  |- library.json (optional, custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
-|  |
-|  |--Foo
-|  |  |- Foo.c
-|  |  |- Foo.h
-|  |
-|  |- README --> THIS FILE
-|
-|- platformio.ini
-|--src
-   |- main.c
+| |
+| |--auto_control
+| | |--auto_control.cpp
+| | |--auto_control.h
+| |--gyro_control
+| | |--gyro_control.cpp
+| | |--gyro_control.h
+| |--interface
+| | |--constant.h
+| | |--data_type.h
+| | |--pin.h
+| |--setup
+| | |--setup.cpp
+| | |--setup.h
 
-and a contents of `src/main.c`:
-```
-#include <Foo.h>
-#include <Bar.h>
+## Class and Function Overview
 
-int main (void)
-{
-  ...
+The library provides the following classes and functions:
+
+- `AutoControl` class:
+  - `moveForward()`: Moves the robot forward at maximum speed.
+  - `moveBackward()`: Moves the robot backward at maximum speed.
+  - `turnRight()`: Turns the robot right.
+  - `turnLeft()`: Turns the robot left.
+  - `moveStop()`: Stops the robot's movement.
+  - `lookRight()`: Looks to the right and returns the distance.
+  - `lookLeft()`: Looks to the left and returns the distance.
+  - `readDistance()`: Reads the distance from the ultrasonic sensor.
+- `Setup` class:
+  - `ESPNOW()`: Initializes the ESP-NOW protocol.
+  - `Motors()`: Initializes the motors.
+  - `Ultrasonic()`: Initializes the ultrasonic sensor.
+  - `Servo()`: Initializes the servo.
+- `GyroControl` class:
+  - `OnDataReceive()`: Handles incoming gyro sensor data.
+  - `vTaskHandGestureControl()`: Controls the robot's movement based on gyro sensor data.
+
+## Usage
+
+To use this library, simply include the necessary header files in your Arduino sketch and call the desired functions. For example:
+
+```cpp
+#include <auto_control.h>
+#include <setup.h>
+
+void setup() {
+  Setup::ESPNOW();
+  Setup::Motors();
+  Setup::Ultrasonic();
+  Setup::Servo();
 }
 
+void loop() {
+  AutoControl::moveForward();
+  delay(1000);
+  AutoControl::turnRight();
+  delay(1000);
+  AutoControl::moveStop();
+}
 ```
 
-PlatformIO Library Dependency Finder will find automatically dependent
-libraries scanning project source files.
-
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
+Note that this is just a basic example, and you will likely need to modify the code to suit your specific use case.
