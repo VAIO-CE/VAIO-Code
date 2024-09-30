@@ -16,6 +16,7 @@ enum class ControlState {
 
 class MasterControl{
 public:
+    static ControlState currentControlMode;
     static TaskHandle_t controlTaskHandle;
     
     static void init();
@@ -23,9 +24,6 @@ public:
     static void handleButtonPress(const uint8_t* data) ;
     static void ESPNOW_OnDataReceive(const uint8_t * mac, const uint8_t *incomingData, int len);
 
-private:
-  static ControlState currentControlMode;
-  
 };
 
 #endif
