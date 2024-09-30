@@ -291,6 +291,7 @@
   "files.associations": {
     "*.embeddedhtml": "html",
     "*.ejs": "html",
-    "iterator": "cpp"
+    "iterator": "cpp",
+    "cstddef": "cpp"
   }
 }

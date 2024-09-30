@@ -6,7 +6,7 @@ float AutoControl::distance = 100.0f;
 
 void AutoControl::moveForward() {
     // Move the DC motor forward at maximum speed
-  Serial.println("Moving Forward");
+  // Serial.println("Moving Forward");
   digitalWrite(motorRightPin1, HIGH);
   digitalWrite(motorRightPin2, LOW);
   digitalWrite(motorLeftPin1, HIGH);
@@ -14,7 +14,7 @@ void AutoControl::moveForward() {
 }
 void AutoControl::moveBackward(){
     // Move DC motor backwards at maximum speed
-  Serial.println("Moving Backwards");
+  // Serial.println("Moving Backwards");
   digitalWrite(motorRightPin1, LOW);
   digitalWrite(motorRightPin2, HIGH);
   digitalWrite(motorLeftPin1, LOW);
@@ -27,7 +27,6 @@ void AutoControl::moveInc(){
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW); 
   while (dutyCycle <= 255){
-    ledcWrite(enableRightPin, dutyCycle);   
     Serial.print("Forward with duty cycle: ");
     Serial.println(dutyCycle);
     dutyCycle = dutyCycle + 5;
@@ -46,7 +45,7 @@ void AutoControl::turnRight(){
   // motor2.run(FORWARD);
   // motor3.run(BACKWARD);
   // motor4.run(BACKWARD); 
-  Serial.println("Right");
+  // Serial.println("Right");
     
   delay(1500);
   // motor1.run(FORWARD);      
@@ -58,7 +57,7 @@ void AutoControl::turnRight(){
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW); 
  
-  Serial.println("Right After Delay");
+  // Serial.println("Right After Delay");
 }
 void AutoControl::turnLeft(){
     // motor1.run(BACKWARD);     
@@ -70,7 +69,7 @@ void AutoControl::turnLeft(){
   digitalWrite(motorLeftPin1, LOW);
   digitalWrite(motorLeftPin2, HIGH); 
  
-  Serial.println("Left");
+  // Serial.println("Left");
 
   delay(1500);
   // motor1.run(FORWARD);     
@@ -82,11 +81,11 @@ void AutoControl::turnLeft(){
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW);
 
-  Serial.println("Left After Delay");
+  // Serial.println("Left After Delay");
 }
 void AutoControl::moveStop(){
     // Stop the DC motor
-  Serial.println("Motor stopped");
+  // Serial.println("Motor stopped");
   digitalWrite(motorRightPin1, LOW);
   digitalWrite(motorRightPin2, LOW);
   digitalWrite(motorLeftPin1, LOW);
@@ -94,7 +93,7 @@ void AutoControl::moveStop(){
 }
 
 int AutoControl::lookRight(){
-    Serial.println("Looking Right");
+    // Serial.println("Looking Right");
     servo1.write(40); 
     delay(500);
     int distance = readDistance();
@@ -103,7 +102,7 @@ int AutoControl::lookRight(){
     return distance;
 }
 int AutoControl::lookLeft(){
-    Serial.println("Looking Left");
+    // Serial.println("Looking Left");
     servo1.write(190); 
     delay(500);
     int distance = readDistance();
@@ -129,17 +128,13 @@ int AutoControl::readDistance(){
   // Calculate the distance
   distanceCm = duration * SOUND_SPEED/2;
   // Prints the distance in the Serial Monitor
-  Serial.print("Distance (cm): ");
-  Serial.println(distanceCm);
+  // Serial.print("Distance (cm): ");
+  // Serial.println(distanceCm);
   return distanceCm;
 }
 
 void AutoControl::vTaskAutoControl(void * pvParameters){
   while(true){
-    //Apply power to spin at maximum speed
-    digitalWrite(enableRightPin, HIGH);
-    digitalWrite(enableLeftPin, HIGH);
-
     int distanceR = 0;
     int distanceL =  0;
     delay(40);

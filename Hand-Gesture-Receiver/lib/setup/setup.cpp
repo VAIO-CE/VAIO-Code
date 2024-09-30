@@ -10,20 +10,20 @@ void Setup::ESPNOW(){
     return;
   }
   
-  // Once ESPNow is successfully Init, we will register for recv CB to
-  // get recv packer info
-  esp_now_register_recv_cb(esp_now_recv_cb_t(GyroControl::OnDataReceive));
+  // Receive data from ESP-NOW
+  esp_now_register_recv_cb(esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
+
   Serial.println("ESP-NOW initialized successfully");
 }
 
 void Setup::Motors(){
+  Serial.println("Setting PIN");
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);
   pinMode(motorRightPin2, OUTPUT);
-  pinMode(enableRightPin, OUTPUT);
   pinMode(motorLeftPin1, OUTPUT);
   pinMode(motorLeftPin2, OUTPUT);
-  pinMode(enableLeftPin, OUTPUT);
+  Serial.println("PIN Has BEEN SET");
 }
 
 void Setup::Ultrasonic(){
@@ -42,4 +42,9 @@ void Setup::Servo(){
   delay(100);
   AutoControl::distance = AutoControl::readDistance();
   delay(100);
+}
+
+
+void Setup::InitialControl(){
+  xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
 }

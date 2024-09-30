@@ -1,3 +1,6 @@
+#ifndef CONSTANT_H
+#define CONSTANT_H
+
 // This is signal timeout in milli seconds.
 #define SIGNAL_TIMEOUT 500  
 
@@ -11,3 +14,6 @@
 
 // FreeRTOS Task Definition
 #define STACK_SIZE 2048
+
+#endif 
+
