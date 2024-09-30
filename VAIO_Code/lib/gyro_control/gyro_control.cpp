@@ -24,6 +24,8 @@ void GyroControl::vTaskGestureControl(void * pvParameters){
     leftMotorSpeed = constrain(leftMotorSpeed, 0, 255);
 
     rotateMotor(rightMotorSpeed * motorDirection, leftMotorSpeed * motorDirection);
+
+    vTaskDelay(10 / portTICK_PERIOD_MS);
   }
 
 }
