@@ -14,7 +14,6 @@
     #include "Wire.h"
 #endif
 
-
 class GyroSensor{
     public:
         static struct GyroSensor_Data gyroSensor_Data;
