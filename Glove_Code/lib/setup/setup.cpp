@@ -98,3 +98,29 @@ void Setup::MPU6050(){
       #endif
   }
 }
+
+void Setup::Button(){
+  pinMode(buttonPin, INPUT);
+}
+
+void Setup::InitialTask(){
+  xTaskCreatePinnedToCore(
+    GyroSensor::vTaskGestureControl,
+    "Hand Gesture Control",
+    STACK_SIZE, // Stack
+    NULL, // Parameter to pass function
+    1, // Task Priority
+    NULL, // Task Handle
+    0 // CPU core
+  );
+
+  xTaskCreatePinnedToCore(
+    ButtonSensor::vTaskButtonControl,
+    "Button Control",
+    STACK_SIZE, // Stack
+    NULL, // Parameter to pass function
+    1, // Task Priority
+    NULL, // Task Handle
+    1 // CPU core
+  );
+}

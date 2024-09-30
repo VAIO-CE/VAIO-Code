@@ -41,6 +41,6 @@ void Setup::Servo(){
 }
 
 
-void Setup::InitialControl(){
+void Setup::InitialTask(){
   xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
 }

@@ -7,6 +7,7 @@
 #include <constant.h>
 #include <pin.h>
 #include <gyro_sensor.h>
+#include <button_sensor.h>
 
 class Setup{
     public:
@@ -14,5 +15,7 @@ class Setup{
         static void ESPNOW();
         static void MPU6050();
         static void VR3();
+        static void Button();
+        static void InitialTask();
 };
 #endif

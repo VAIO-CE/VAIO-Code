@@ -9,7 +9,7 @@ void setup() {
   Setup::Motors();
   Setup::Ultrasonic();
   Setup::Servo();
-  Setup::InitialControl();
+  Setup::InitialTask();
 }
 
 void loop(){

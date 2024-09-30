@@ -15,6 +15,6 @@ class Setup{
         static void Motors();
         static void Ultrasonic();
         static void Servo();
-        static void InitialControl();
+        static void InitialTask();
 };
 #endif
