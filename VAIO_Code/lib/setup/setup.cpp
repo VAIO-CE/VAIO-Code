@@ -6,24 +6,20 @@ void Setup::ESPNOW(){
 
   // Init ESP-NOW
   if (esp_now_init() != ESP_OK) {
-    Serial.println("Error initializing ESP-NOW");
     return;
   }
   
   // Receive data from ESP-NOW
   esp_now_register_recv_cb(esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
 
-  Serial.println("ESP-NOW initialized successfully");
 }
 
 void Setup::Motors(){
-  Serial.println("Setting PIN");
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);
   pinMode(motorRightPin2, OUTPUT);
   pinMode(motorLeftPin1, OUTPUT);
   pinMode(motorLeftPin2, OUTPUT);
-  Serial.println("PIN Has BEEN SET");
 }
 
 void Setup::Ultrasonic(){

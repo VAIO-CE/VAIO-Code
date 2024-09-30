@@ -6,7 +6,6 @@ float AutoControl::distance = 100.0f;
 
 void AutoControl::moveForward() {
     // Move the DC motor forward at maximum speed
-  // Serial.println("Moving Forward");
   digitalWrite(motorRightPin1, HIGH);
   digitalWrite(motorRightPin2, LOW);
   digitalWrite(motorLeftPin1, HIGH);
@@ -14,7 +13,6 @@ void AutoControl::moveForward() {
 }
 void AutoControl::moveBackward(){
     // Move DC motor backwards at maximum speed
-  // Serial.println("Moving Backwards");
   digitalWrite(motorRightPin1, LOW);
   digitalWrite(motorRightPin2, HIGH);
   digitalWrite(motorLeftPin1, LOW);
@@ -27,8 +25,6 @@ void AutoControl::moveInc(){
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW); 
   while (dutyCycle <= 255){
-    Serial.print("Forward with duty cycle: ");
-    Serial.println(dutyCycle);
     dutyCycle = dutyCycle + 5;
     delay(500);
   }
@@ -45,7 +41,6 @@ void AutoControl::turnRight(){
   // motor2.run(FORWARD);
   // motor3.run(BACKWARD);
   // motor4.run(BACKWARD); 
-  // Serial.println("Right");
     
   delay(1500);
   // motor1.run(FORWARD);      
@@ -57,7 +52,6 @@ void AutoControl::turnRight(){
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW); 
  
-  // Serial.println("Right After Delay");
 }
 void AutoControl::turnLeft(){
     // motor1.run(BACKWARD);     
@@ -69,8 +63,6 @@ void AutoControl::turnLeft(){
   digitalWrite(motorLeftPin1, LOW);
   digitalWrite(motorLeftPin2, HIGH); 
  
-  // Serial.println("Left");
-
   delay(1500);
   // motor1.run(FORWARD);     
   // motor2.run(FORWARD);
@@ -81,11 +73,9 @@ void AutoControl::turnLeft(){
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW);
 
-  // Serial.println("Left After Delay");
 }
 void AutoControl::moveStop(){
     // Stop the DC motor
-  // Serial.println("Motor stopped");
   digitalWrite(motorRightPin1, LOW);
   digitalWrite(motorRightPin2, LOW);
   digitalWrite(motorLeftPin1, LOW);
@@ -93,7 +83,6 @@ void AutoControl::moveStop(){
 }
 
 int AutoControl::lookRight(){
-    // Serial.println("Looking Right");
     servo1.write(40); 
     delay(500);
     int distance = readDistance();
@@ -102,7 +91,6 @@ int AutoControl::lookRight(){
     return distance;
 }
 int AutoControl::lookLeft(){
-    // Serial.println("Looking Left");
     servo1.write(190); 
     delay(500);
     int distance = readDistance();
@@ -127,9 +115,7 @@ int AutoControl::readDistance(){
   
   // Calculate the distance
   distanceCm = duration * SOUND_SPEED/2;
-  // Prints the distance in the Serial Monitor
-  // Serial.print("Distance (cm): ");
-  // Serial.println(distanceCm);
+
   return distanceCm;
 }
 

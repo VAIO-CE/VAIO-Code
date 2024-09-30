@@ -51,10 +51,8 @@ void MasterControl::setControlMode(ControlState mode) {
 void MasterControl::handleButtonPress(const uint8_t* data) {
   // For example, switch control modes based on button press data
   if (data[0] == 0x01) {  // Button press data for switching to gyro control
-    Serial.println("Control is now Hand Gesture");
     setControlMode(ControlState::GYRO_CONTROL);
   } else if (data[0] == 0x02) {  // Button press data for switching to auto control
-  Serial.println("Control is now Automatic");
     setControlMode(ControlState::AUTO_CONTROL);
   }
 }

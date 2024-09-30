@@ -22,13 +22,12 @@ void Setup::ESPNOW(){
     Serial.println("Failed to add peer");
     return;
   }
-
-
-  GyroSensor::gyroSensor_Data.xAxisValue = 127; // Center
-  GyroSensor::gyroSensor_Data.yAxisValue = 127; // Center 
 }
 
 void Setup::MPU6050(){
+  GyroSensor::gyroSensor_Data.xAxisValue = 127; // Center
+  GyroSensor::gyroSensor_Data.yAxisValue = 127; // Center 
+
   // join I2C bus (I2Cdev library doesn't do this automatically)
   #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
       Wire.begin();
@@ -84,6 +83,7 @@ void Setup::MPU6050(){
   
       // get expected DMP packet size for later comparison
       GyroSensor::packetSize = GyroSensor::mpu.dmpGetFIFOPacketSize();
+      
   } 
   else 
   {

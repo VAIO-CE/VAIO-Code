@@ -4,12 +4,9 @@ struct GyroSensor_Data GyroControl::gyroSensor_Data;
 
 void GyroControl::vTaskGestureControl(void * pvParameters){
   while(true){
-    
 
     int rightMotorSpeed=0;
     int leftMotorSpeed=0;
-
-    delay(40);
 
     int mappedYValue = map(gyroSensor_Data.yAxisValue, 0, 254, -255, 255); 
     int mappedXValue = map(gyroSensor_Data.xAxisValue, 0, 254, -255, 255); 
