@@ -21,7 +21,8 @@ public:
     
     static void init();
     static void setControlMode(ControlState mode);
-    static void handleButtonPress(const uint8_t* data) ;
+    static void handleButtonPress(const uint8_t* data);
+    static void handleVoiceCommand(const uint8_t* data);
     static void ESPNOW_OnDataReceive(const uint8_t * mac, const uint8_t *incomingData, int len);
 
 };

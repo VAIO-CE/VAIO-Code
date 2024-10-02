@@ -1,6 +1,7 @@
 #include <setup.h>
 
 esp_now_peer_info_t Setup::peerInfo;
+VR VR3Sensor::vr3(vr3_rx_pin, vr3_tx_pin);
 
 void Setup::ESPNOW(){
   // Set device as a Wi-Fi Station
@@ -103,6 +104,27 @@ void Setup::Button(){
   pinMode(buttonPin, INPUT);
 }
 
+void Setup::VR3(){
+  VR3Sensor::vr3.begin(9600);
+
+  // Check and clear recognizer, get responses, ignore them to get VR3 started in a known state
+  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
+  VR3Sensor::vr3.send_pkt(vr3_check_recog_cmd, sizeof(vr3_check_recog_cmd));
+  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
+  VR3Sensor::vr3.send_pkt(vr3_clear_recog_cmd, sizeof(vr3_clear_recog_cmd));
+  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
+
+  // Load word recognition records
+  VR3Sensor::vr3.send_pkt(vr3_load_records_cmd, sizeof(vr3_load_records_cmd));
+  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
+  VR3Sensor::vr3.send_pkt(vr3_load_records_cmd1, sizeof(vr3_load_records_cmd1));
+
+  if (VR3Sensor::checkForVR3LoadResponse(1000))
+    Serial.println("Listening...");
+  else
+    Serial.println("VR3 Not Started");  
+}
+
 void Setup::InitialTask(){
   xTaskCreatePinnedToCore(
     GyroSensor::vTaskGestureControl,
@@ -123,4 +145,16 @@ void Setup::InitialTask(){
     NULL, // Task Handle
     1 // CPU core
   );
+
+  xTaskCreatePinnedToCore(
+    VR3Sensor::vTaskVoiceRecognition,
+    "Voice Recognition Task",
+    STACK_SIZE,
+    NULL, 
+    1,
+    NULL,
+    1
+  );
+
+
 }
