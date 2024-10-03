@@ -19,6 +19,9 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t * mac, const uint8_t *inc
     case BUTTON_DATA:
       handleButtonPress(data);
       break;
+    case VR3_SENSOR_DATA:
+      handleVoiceCommand(data);
+      break
     default:
       // Unknown data type
       break;
@@ -55,4 +58,8 @@ void MasterControl::handleButtonPress(const uint8_t* data) {
   } else if (data[0] == 0x02) {  // Button press data for switching to auto control
     setControlMode(ControlState::AUTO_CONTROL);
   }
+}
+
+void MasterControl::handleVoiceCommand(const uint8_t* data){
+  
 }

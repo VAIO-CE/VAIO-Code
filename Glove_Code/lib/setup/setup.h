@@ -7,6 +7,7 @@
 #include <constant.h>
 #include <pin.h>
 #include <gyro_sensor.h>
+#include <vr3_sensor.h>
 #include <button_sensor.h>
 
 class Setup{
