@@ -10,15 +10,18 @@
 #include <web_server.h>
 #include <ESPmDNS.h>
 #include <pin.h>
+#include <ds4_control.h>
 
-class Setup{
-    public:
-        static void Wifi();
-        static void ESPNOW();
-        static void WebServer();
-        static void Motors();
-        static void Ultrasonic();
-        static void Servo();
-        static void InitialTask();
+class Setup
+{
+public:
+    static void Wifi();
+    static void ESPNOW();
+    static void WebServer();
+    static void Motors();
+    static void Ultrasonic();
+    static void Servo();
+    static void DS4();
+    static void InitialTask();
 };
 #endif

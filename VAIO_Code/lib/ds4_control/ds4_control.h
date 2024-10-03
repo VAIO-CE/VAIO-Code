@@ -2,11 +2,19 @@
 #define DS4_CONTROL_H
 
 #include "Arduino.h"
-#include <pin.h>
-#include <constants.h>
+#include "ps4Controller.h"
+#include "constants.h"
+#include "pin.h"
 
-class DS4Control{
+class DS4Control
+{
 public:
-    static void ds4_function();
+    static ps4Controller ps4;
+
+    static void vTaskDS4Control(void *pvParameters);
+    static void onConnect();
+    static void onDisconnect();
+    static void rotateMotor(int rightMotorSpeed, int leftMotorSpeed);
 };
+
 #endif

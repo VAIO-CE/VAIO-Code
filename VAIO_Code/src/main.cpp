@@ -1,8 +1,10 @@
 
 #include <Arduino.h>
 #include <setup.h>
+#include <ds4_control.h>
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
 
   Setup::Wifi();
@@ -11,10 +13,12 @@ void setup() {
   Setup::Motors();
   Setup::Ultrasonic();
   Setup::Servo();
+  Setup::DS4();
   Setup::InitialTask();
+
+  vTaskDelete(NULL);
 }
 
-void loop(){
-  
-
+void loop()
+{
 }

@@ -1,22 +1,25 @@
 #include <setup.h>
 
-void Setup::Wifi(){
+void Setup::Wifi()
+{
   // Set device as a Wi-Fi AP Station
   WiFi.mode(WIFI_AP_STA);
 
-  WiFi.softAP(ssid, password);
-  WiFi.softAPConfig(local_ip, gateway, subnet);
+  WiFi.softAP(SSID, PASSWORD);
+  WiFi.softAPConfig(LOCAL_IP, GATEWAY, SUBNET);
   delay(100);
   Serial.println("WiFi started");
-
 }
 
-void Setup::WebServer(){
+void Setup::WebServer()
+{
 
   /*use mdns for host name resolution*/
-  if (!MDNS.begin(host)) { //http://esp32.local
+  if (!MDNS.begin(HOST))
+  { // http://esp32.local
     Serial.println("Error setting up MDNS responder!");
-    while (1) {
+    while (1)
+    {
       delay(1000);
     }
   }
@@ -27,21 +30,23 @@ void Setup::WebServer(){
   Serial.println("HTTP server started");
 }
 
-void Setup::ESPNOW(){
-
+void Setup::ESPNOW()
+{
   // Init ESP-NOW
-  if (esp_now_init() != ESP_OK) {
+  if (esp_now_init() != ESP_OK)
+  {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
 
   Serial.println("ESP-NOW started");
-  
+
   // Receive data from ESP-NOW
   esp_now_register_recv_cb(esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
 }
 
-void Setup::Motors(){
+void Setup::Motors()
+{
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);
   pinMode(motorRightPin2, OUTPUT);
@@ -51,20 +56,37 @@ void Setup::Motors(){
   Serial.println("Motor Pins Initialized");
 }
 
-void Setup::Ultrasonic(){
+void Setup::Ultrasonic()
+{
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(echoPin, INPUT);  // Sets the echoPin as an Input
   Serial.println("Ultrasonic Pins Initialized");
 }
 
-void Setup::Servo(){
+void Setup::Servo()
+{
   AutoControl::servo1.attach(servoPin);
   AutoControl::servo1.write(115);
   Serial.println("Servo Pins Initialized");
 }
 
-void Setup::InitialTask(){
-  xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  //xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  Serial.println("Auto Control Initialized");
+void Setup::DS4()
+{
+  DS4Control::ps4.begin("d0:27:88:51:4c:50");
+
+  while (!DS4Control::ps4.isConnected())
+  {
+    Serial.println("PS4 Controller Not Found!");
+    delay(300);
+  }
+
+  Serial.println("Ready & Connected!");
+}
+
+void Setup::InitialTask()
+{
+  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  //  xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  //  Serial.println("Auto Control Initialized");
+  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
 }
