@@ -6,25 +6,27 @@
 #include "freertos/task.h"
 #include "auto_control.h"
 #include "gyro_control.h"
+#include "ds4_control.h"
 
 // Define ENUM for control states
-enum class ControlState {
+enum class ControlState
+{
   AUTO_CONTROL,
   GYRO_CONTROL,
   DS4_CONTROL,
 };
 
-class MasterControl{
+class MasterControl
+{
 public:
-    static ControlState currentControlMode;
-    static TaskHandle_t controlTaskHandle;
-    
-    static void init();
-    static void setControlMode(ControlState mode);
-    static void handleButtonPress(const uint8_t* data);
-    static void handleVoiceCommand(const uint8_t* data);
-    static void ESPNOW_OnDataReceive(const uint8_t * mac, const uint8_t *incomingData, int len);
+  static ControlState currentControlMode;
+  static TaskHandle_t controlTaskHandle;
 
+  static void init();
+  static void setControlMode(ControlState mode);
+  static void handleButtonPress(const uint8_t *data);
+  static void handleVoiceCommand(const uint8_t *data);
+  static void ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len);
 };
 
 #endif

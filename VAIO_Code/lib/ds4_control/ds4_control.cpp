@@ -2,9 +2,9 @@
 
 ps4Controller DS4Control::ps4;
 
-void DS4Control::vTaskDS4Control(void *paramater)
+void DS4Control::vTaskDS4Control(void *pvParamaters)
 {
-    while (1)
+    while (true)
     {
         int yAxisValue{(ps4.data.analog.stick.ly)};
         int xAxisValue{(ps4.data.analog.stick.rx)};
@@ -69,7 +69,4 @@ void DS4Control::rotateMotor(int rightMotorSpeed, int leftMotorSpeed)
         digitalWrite(motorLeftPin1, LOW);
         digitalWrite(motorLeftPin2, LOW);
     }
-
-    // Set Motor Speeds
-    // To-Do
 }

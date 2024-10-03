@@ -1,7 +1,5 @@
-
 #include <Arduino.h>
 #include <setup.h>
-#include <ds4_control.h>
 
 void setup()
 {
@@ -21,4 +19,5 @@ void setup()
 
 void loop()
 {
+  // Handled by FreeRTOS
 }
