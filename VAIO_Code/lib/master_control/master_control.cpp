@@ -48,6 +48,10 @@ void MasterControl::setControlMode(ControlState mode)
     xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   case ControlState::DS4_CONTROL:
+    // Stop the current task
+    vTaskDelete(controlTaskHandle);
+    // Start the DS4 control task
+    xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   default:
     // Handle unknown control mode
@@ -66,6 +70,11 @@ void MasterControl::handleButtonPress(const uint8_t *data)
   else if (data[0] == 0x02)
   { // Button press data for switching to auto control
     setControlMode(ControlState::AUTO_CONTROL);
+  }
+  else if (data[0] == 0x03)
+  {
+    // Button press data for switching to DS4 control
+    setControlMode(ControlState::DS4_CONTROL);
   }
 }
 

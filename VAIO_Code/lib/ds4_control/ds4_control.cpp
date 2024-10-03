@@ -1,10 +1,16 @@
 #include <ds4_control.h>
 
 ps4Controller DS4Control::ps4;
+Preferences DS4Control::preferences;
 
-void DS4Control::vTaskDS4Control(void *paramater)
+void DS4Control::initializePreferences()
 {
-    while (1)
+    preferences.begin(MAC_ADDR_STORAGE_NAMESPACE, false);
+}
+
+void DS4Control::vTaskDS4Control(void *pvParamaters)
+{
+    while (true)
     {
         int yAxisValue{(ps4.data.analog.stick.ly)};
         int xAxisValue{(ps4.data.analog.stick.rx)};
@@ -69,7 +75,4 @@ void DS4Control::rotateMotor(int rightMotorSpeed, int leftMotorSpeed)
         digitalWrite(motorLeftPin1, LOW);
         digitalWrite(motorLeftPin2, LOW);
     }
-
-    // Set Motor Speeds
-    // To-Do
 }

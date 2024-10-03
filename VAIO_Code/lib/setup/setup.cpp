@@ -72,7 +72,22 @@ void Setup::Servo()
 
 void Setup::DS4()
 {
-  DS4Control::ps4.begin("d0:27:88:51:4c:50");
+  DS4Control::initializePreferences();
+
+  // For now, hardcode default value and emulate user previously sending MAC address
+  // To-Do --> Remove default value with empty string and handle empty MAC address value
+  const char *btmac = DS4Control::preferences.getString("btmac", "d0:27:88:51:4c:50").c_str();
+
+  while (btmac == "")
+  {
+    Serial.println("MAC address fetch error!");
+    delay(3000);
+  }
+
+  DS4Control::preferences.end();
+
+  // Connect
+  DS4Control::ps4.begin(btmac);
 
   while (!DS4Control::ps4.isConnected())
   {

@@ -27,4 +27,7 @@ static const IPAddress LOCAL_IP(192, 168, 1, 1);
 static const IPAddress GATEWAY(192, 168, 1, 1);
 static const IPAddress SUBNET(255, 255, 255, 0);
 
+// Used NVS Namespace for DS4 MAC Address
+static const char *MAC_ADDR_STORAGE_NAMESPACE = "DS4-NVS";
+
 #endif
