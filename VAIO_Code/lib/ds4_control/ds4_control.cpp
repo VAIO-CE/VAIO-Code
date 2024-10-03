@@ -1,6 +1,12 @@
 #include <ds4_control.h>
 
 ps4Controller DS4Control::ps4;
+Preferences DS4Control::preferences;
+
+void DS4Control::initializePreferences()
+{
+    preferences.begin(MAC_ADDR_STORAGE_NAMESPACE, false);
+}
 
 void DS4Control::vTaskDS4Control(void *pvParamaters)
 {

@@ -72,12 +72,11 @@ void Setup::Servo()
 
 void Setup::DS4()
 {
-  Preferences p;
-  p.begin(MAC_ADDR_STORAGE_NAMESPACE, false);
+  DS4Control::initializePreferences();
 
   // For now, hardcode default value and emulate user previously sending MAC address
   // To-Do --> Remove default value with empty string and handle empty MAC address value
-  const char *btmac = p.getString("btmac", "d0:27:88:51:4c:50").c_str();
+  const char *btmac = DS4Control::preferences.getString("btmac", "d0:27:88:51:4c:50").c_str();
 
   while (btmac == "")
   {
@@ -85,7 +84,7 @@ void Setup::DS4()
     delay(3000);
   }
 
-  p.end();
+  DS4Control::preferences.end();
 
   // Connect
   DS4Control::ps4.begin(btmac);
