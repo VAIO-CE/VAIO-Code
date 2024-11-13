@@ -1,7 +1,7 @@
 #include <setup.h>
+// #include <speech_recognition_inferencing.h>
 
 esp_now_peer_info_t Setup::peerInfo;
-VR VR3Sensor::vr3(vr3_rx_pin, vr3_tx_pin);
 
 void Setup::ESPNOW(){
   // Set device as a Wi-Fi Station
@@ -50,7 +50,7 @@ void Setup::MPU6050(){
   #ifdef PRINT_DEBUG  
     // verify connection
     Serial.println(F("Testing device connections..."));
-    Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+    Serial.println(GyroSensor::mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
     // wait for ready
     Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
@@ -70,7 +70,7 @@ void Setup::MPU6050(){
       GyroSensor::mpu.CalibrateGyro(6);
       
       #ifdef PRINT_DEBUG      
-        mpu.PrintActiveOffsets();
+        GyroSensor::mpu.PrintActiveOffsets();
         // turn on the DMP, now that it's ready
         Serial.println(F("Enabling DMP..."));
       #endif
@@ -94,7 +94,7 @@ void Setup::MPU6050(){
       // (if it's going to break, usually the code will be 1)
       #ifdef PRINT_DEBUG       
         Serial.print(F("DMP Initialization failed (code "));
-        Serial.print(devStatus);
+        Serial.print(GyroSensor::devStatus);
         Serial.println(F(")"));
       #endif
   }
@@ -104,25 +104,9 @@ void Setup::Button(){
   pinMode(buttonPin, INPUT);
 }
 
-void Setup::VR3(){
-  VR3Sensor::vr3.begin(9600);
 
-  // Check and clear recognizer, get responses, ignore them to get VR3 started in a known state
-  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
-  VR3Sensor::vr3.send_pkt(vr3_check_recog_cmd, sizeof(vr3_check_recog_cmd));
-  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
-  VR3Sensor::vr3.send_pkt(vr3_clear_recog_cmd, sizeof(vr3_clear_recog_cmd));
-  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
-
-  // Load word recognition records
-  VR3Sensor::vr3.send_pkt(vr3_load_records_cmd, sizeof(vr3_load_records_cmd));
-  VR3Sensor::vr3.receive_pkt(VR3Sensor::vr3_buf, 50);
-  VR3Sensor::vr3.send_pkt(vr3_load_records_cmd1, sizeof(vr3_load_records_cmd1));
-
-  if (VR3Sensor::checkForVR3LoadResponse(1000))
-    Serial.println("Listening...");
-  else
-    Serial.println("VR3 Not Started");  
+void Setup::SpeechRecognition(){
+  SpeechRecognition::setupSpeechRecognition();
 }
 
 void Setup::InitialTask(){
@@ -136,20 +120,20 @@ void Setup::InitialTask(){
     0 // CPU core
   );
 
-  xTaskCreatePinnedToCore(
-    ButtonSensor::vTaskButtonControl,
-    "Button Control",
-    STACK_SIZE, // Stack
-    NULL, // Parameter to pass function
-    1, // Task Priority
-    NULL, // Task Handle
-    1 // CPU core
-  );
+  // xTaskCreatePinnedToCore(
+  //   ButtonSensor::vTaskButtonControl,
+  //   "Button Control",
+  //   STACK_SIZE, // Stack
+  //   NULL, // Parameter to pass function
+  //   1, // Task Priority
+  //   NULL, // Task Handle
+  //   1 // CPU core
+  // );
 
   xTaskCreatePinnedToCore(
-    VR3Sensor::vTaskVoiceRecognition,
+    SpeechRecognition::vTaskSpeechRecognition,
     "Voice Recognition Task",
-    STACK_SIZE,
+    STACK_SIZE * 8,
     NULL, 
     1,
     NULL,
