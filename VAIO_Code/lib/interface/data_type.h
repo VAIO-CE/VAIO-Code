@@ -6,21 +6,23 @@
 enum ESPNOW_DataType {
   GYRO_SENSOR_DATA,
   BUTTON_DATA,
-  VR3_SENSOR_DATA,
+  SPEECH_DATA,
 };
 
 /// @brief Gyroscope data from ESP-NOW
 struct GyroSensor_Data
 {
-  byte xAxisValue;    
-  byte yAxisValue;
+  uint8_t xAxisValue;    
+  uint8_t yAxisValue;
 };
 
-/// @brief VR3 data from ESP-NOW
-struct VR3Sensor_Data
+struct SpeechRecognition_Data
 {
-  byte command;
+  float move;
+  float control;
+  float hand;
+  float on;
+  float off;
 };
-
 
 #endif 

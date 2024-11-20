@@ -3,6 +3,8 @@
 ControlState MasterControl::currentControlMode = ControlState::AUTO_CONTROL;
 TaskHandle_t MasterControl::controlTaskHandle = NULL;
 
+struct SpeechRecognition_Data MasterControl::speechRecognition_Data;
+
 void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
   if (len < 1)
@@ -17,13 +19,16 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *inco
   switch (dataType)
   {
   case GYRO_SENSOR_DATA:
+    Serial.println("Receive Gyro Data");
     memcpy(&GyroControl::gyroSensor_Data, data, sizeof(GyroSensor_Data));
     break;
   case BUTTON_DATA:
     handleButtonPress(data);
     break;
-  case VR3_SENSOR_DATA:
-    handleVoiceCommand(data);
+  case SPEECH_DATA:
+    Serial.println("Receive Speech Data");
+    memcpy(&MasterControl::speechRecognition_Data, data, sizeof(SpeechRecognition_Data));
+    handleSpeechCommand();
     break;
   default:
     // Unknown data type
@@ -78,6 +83,17 @@ void MasterControl::handleButtonPress(const uint8_t *data)
   }
 }
 
-void MasterControl::handleVoiceCommand(const uint8_t *data)
-{
+void MasterControl::handleSpeechCommand(){
+  if (speechRecognition_Data.control > 0.7){
+      Serial.println("Heard: Control");
+      setControlMode(ControlState::DS4_CONTROL);
+  }
+  if (speechRecognition_Data.hand > 0.7){
+      Serial.println("Heard: Hand");
+      setControlMode(ControlState::GYRO_CONTROL);
+  }
+  if (speechRecognition_Data.move > 0.55){
+      Serial.println("Heard: Move");
+      setControlMode(ControlState::AUTO_CONTROL);
+  }
 }

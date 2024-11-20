@@ -5,6 +5,7 @@ void setup() {
   
   Setup::ESPNOW();
   Setup::MPU6050();
+  Setup::SpeechRecognition();
   Setup::InitialTask();
   
 }
