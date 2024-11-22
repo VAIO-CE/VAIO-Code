@@ -32,6 +32,12 @@
 #ifndef _EI_CLASSIFIER_MODEL_METADATA_H_
 #define _EI_CLASSIFIER_MODEL_METADATA_H_
 
+/**
+* @file
+*  Auto-generated global deployment macros.
+*  model_metadata.h defines if certain functions are enabled or disabled in the whole project.
+*/
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -73,8 +79,8 @@
 #define EI_CLASSIFIER_PROJECT_ID                 538705
 #define EI_CLASSIFIER_PROJECT_OWNER              "Farras Rafi Permana"
 #define EI_CLASSIFIER_PROJECT_NAME               "speech_recognition"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     35
-#define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        650
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     52
+#define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        800
 #define EI_CLASSIFIER_RAW_SAMPLE_COUNT           16000
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      1
 #define EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE       (EI_CLASSIFIER_RAW_SAMPLE_COUNT * EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME)
@@ -82,9 +88,9 @@
 #define EI_CLASSIFIER_INPUT_HEIGHT               0
 #define EI_CLASSIFIER_RESIZE_MODE                EI_CLASSIFIER_RESIZE_NONE
 #define EI_CLASSIFIER_INPUT_FRAMES               0
-#define EI_CLASSIFIER_NN_OUTPUT_COUNT            7
+#define EI_CLASSIFIER_NN_OUTPUT_COUNT            5
 #define EI_CLASSIFIER_INTERVAL_MS                0.0625
-#define EI_CLASSIFIER_LABEL_COUNT                7
+#define EI_CLASSIFIER_LABEL_COUNT                5
 #define EI_CLASSIFIER_HAS_ANOMALY                EI_ANOMALY_TYPE_UNKNOWN
 #define EI_CLASSIFIER_HAS_VISUAL_ANOMALY         0
 #define EI_CLASSIFIER_SINGLE_FEATURE_INPUT       1
@@ -99,6 +105,7 @@
 #define EI_CLASSIFIER_TFLITE_INPUT_DATATYPE         EI_CLASSIFIER_DATATYPE_INT8
 #define EI_CLASSIFIER_TFLITE_OUTPUT_DATATYPE        EI_CLASSIFIER_DATATYPE_INT8
 
+#define EI_CLASSIFIER_TFLITE_LARGEST_ARENA_SIZE  9971
 
 #define EI_CLASSIFIER_INFERENCING_ENGINE            EI_CLASSIFIER_TFLITE
 
@@ -135,7 +142,7 @@
 
 #define EI_STUDIO_VERSION_MAJOR             1
 #define EI_STUDIO_VERSION_MINOR             61
-#define EI_STUDIO_VERSION_PATCH             8
+#define EI_STUDIO_VERSION_PATCH             22
 
 #define EI_CLASSIFIER_HR_ENABLED            0
 

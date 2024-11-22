@@ -7,7 +7,7 @@
 
 #define EIDSP_QUANTIZE_FILTERBANK   0
 
-#define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW 3
+#define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW 2
 
 
 struct SpeechRecognition_Data SpeechRecognition::speechRecognition_Data;
@@ -26,15 +26,15 @@ void SpeechRecognition::setupSpeechRecognition(){
     // Serial.println("Edge Impulse Inferencing Demo");
 
     // summary of inferencing settings (from model_metadata.h)
-    #ifdef PRINT_DEBUG
-        ei_printf("Inferencing settings:\n");
-        ei_printf("\tInterval: ");
-        ei_printf_float((float)EI_CLASSIFIER_INTERVAL_MS);
-        ei_printf(" ms.\n");
-        ei_printf("\tFrame size: %d\n", EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE);
-        ei_printf("\tSample length: %d ms.\n", EI_CLASSIFIER_RAW_SAMPLE_COUNT / 16);
-        ei_printf("\tNo. of classes: %d\n", sizeof(ei_classifier_inferencing_categories) / sizeof(ei_classifier_inferencing_categories[0]));
-    #endif
+    // #ifdef PRINT_DEBUG
+    ei_printf("Inferencing settings:\n");
+    ei_printf("\tInterval: ");
+    ei_printf_float((float)EI_CLASSIFIER_INTERVAL_MS);
+    ei_printf(" ms.\n");
+    ei_printf("\tFrame size: %d\n", EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE);
+    ei_printf("\tSample length: %d ms.\n", EI_CLASSIFIER_RAW_SAMPLE_COUNT / 16);
+    ei_printf("\tNo. of classes: %d\n", sizeof(ei_classifier_inferencing_categories) / sizeof(ei_classifier_inferencing_categories[0]));
+    // #endif
 
     run_classifier_init();
     ei_printf("\nStarting continious inference in 2 seconds...\n");
@@ -68,18 +68,21 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters){
                 return;
             }
             // inference result
-            if (result.classification[2].value > 0.7){
-                Serial.println("Heard: Control");
+            if (result.classification[2].value > 0.6){
+                Serial.print("Heard: Control -> ");
+                Serial.println(result.classification[2].value);
             }
-            if (result.classification[3].value > 0.7){
-                Serial.println("Heard: Hand");
+            if (result.classification[3].value > 0.6){
+                Serial.print("Heard: Hand ->");
+                Serial.println(result.classification[3].value);
             }
             if (result.classification[4].value > 0.6){
-                Serial.println("Heard: Move");
+                Serial.print("Heard: Move ->");
+                Serial.println(result.classification[4].value);
             }
             // if (++print_results >= (EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW)) {
                 // print the predictions
-            #ifdef PRINT_DEBUG
+            // #ifdef PRINT_DEBUG
                 ei_printf("Predictions ");
                 ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
                     result.timing.dsp, result.timing.classification, result.timing.anomaly);
@@ -89,7 +92,7 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters){
                     ei_printf_float(result.classification[ix].value);
                     ei_printf("\n");
                 }
-            #endif
+            // #endif
                 // }
             // #if EI_CLASSIFIER_HAS_ANOMALY == 1
             //         ei_printf("    anomaly score: ");
@@ -256,7 +259,7 @@ int SpeechRecognition::i2s_init(uint32_t sampling_rate) {
       .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX),
       .sample_rate = sampling_rate,
       .bits_per_sample = (i2s_bits_per_sample_t)16,
-      .channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,
+      .channel_format = I2S_CHANNEL_FMT_ONLY_LEFT,
       .communication_format = I2S_COMM_FORMAT_I2S,
       .intr_alloc_flags = 0,
       .dma_buf_count = 8,

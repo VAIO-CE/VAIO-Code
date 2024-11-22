@@ -32,28 +32,35 @@
 #ifndef _EI_CLASSIFIER_MODEL_VARIABLES_H_
 #define _EI_CLASSIFIER_MODEL_VARIABLES_H_
 
+/**
+ * @file
+ *  Auto-generated complete impulse definitions. The ei_impulse_handle_t should
+ *  be passed to ei_run_classifier() function to use this specific impulse.
+ *  This file should only be included in ei_run_classifier.h file.
+ */
+
 #include <stdint.h>
 #include "model_metadata.h"
 
-#include "tflite-model/tflite_learn_8.h"
+#include "tflite-model/tflite_learn_15.h"
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/engines.h"
 
-const char* ei_classifier_inferencing_categories[] = { "_noise", "_unknown", "control", "hand", "move", "off", "on" };
+const char* ei_classifier_inferencing_categories[] = { "_noise", "_unknown", "control", "hand", "move" };
 
-ei_dsp_named_axis_t ei_dsp_config_6_named_axes[] = {
+ei_dsp_named_axis_t ei_dsp_config_14_named_axes[] = {
     { .name = "Signal", .axis = 0 }
 };
-size_t ei_dsp_config_6_named_axes_size = 1;
-uint8_t ei_dsp_config_6_axes[] = { 0 };
-const uint32_t ei_dsp_config_6_axes_size = 1;
-ei_dsp_config_mfcc_t ei_dsp_config_6 = {
-    6, // uint32_t blockId
+size_t ei_dsp_config_14_named_axes_size = 1;
+uint8_t ei_dsp_config_14_axes[] = { 0 };
+const uint32_t ei_dsp_config_14_axes_size = 1;
+ei_dsp_config_mfcc_t ei_dsp_config_14 = {
+    14, // uint32_t blockId
     4, // int implementationVersion
     1, // int length of axes
-    ei_dsp_config_6_named_axes, // named axes
-    ei_dsp_config_6_named_axes_size, // size of the named axes array
-    13, // int num_cepstral
+    ei_dsp_config_14_named_axes, // named axes
+    ei_dsp_config_14_named_axes_size, // size of the named axes array
+    16, // int num_cepstral
     0.02f, // float frame_length
     0.02f, // float frame_stride
     32, // int num_filters
@@ -67,28 +74,28 @@ ei_dsp_config_mfcc_t ei_dsp_config_6 = {
 
 const uint8_t ei_dsp_blocks_size = 1;
 ei_model_dsp_t ei_dsp_blocks[ei_dsp_blocks_size] = {
-    { // DSP block 6
-        6,
-        650, // output size
+    { // DSP block 14
+        14,
+        800, // output size
         &extract_mfcc_features, // DSP function pointer
-        (void*)&ei_dsp_config_6, // pointer to config struct
-        ei_dsp_config_6_axes, // array of offsets into the input stream, one for each axis
-        ei_dsp_config_6_axes_size, // number of axes
+        (void*)&ei_dsp_config_14, // pointer to config struct
+        ei_dsp_config_14_axes, // array of offsets into the input stream, one for each axis
+        ei_dsp_config_14_axes_size, // number of axes
         1, // version
         nullptr, // factory function
     }
 };
-const ei_config_tflite_graph_t ei_config_tflite_graph_8 = {
+const ei_config_tflite_graph_t ei_config_tflite_graph_15 = {
     .implementation_version = 1,
-    .model = tflite_learn_8,
-    .model_size = tflite_learn_8_len,
-    .arena_size = tflite_learn_8_arena_size
+    .model = tflite_learn_15,
+    .model_size = tflite_learn_15_len,
+    .arena_size = tflite_learn_15_arena_size
 };
 
-const ei_learning_block_config_tflite_graph_t ei_learning_block_config_8 = {
+const ei_learning_block_config_tflite_graph_t ei_learning_block_config_15 = {
     .implementation_version = 1,
     .classification_mode = EI_CLASSIFIER_CLASSIFICATION_MODE_CLASSIFICATION,
-    .block_id = 8,
+    .block_id = 15,
     .object_detection = 0,
     .object_detection_last_layer = EI_CLASSIFIER_LAST_LAYER_UNKNOWN,
     .output_data_tensor = 0,
@@ -97,22 +104,22 @@ const ei_learning_block_config_tflite_graph_t ei_learning_block_config_8 = {
     .threshold = 0,
     .quantized = 1,
     .compiled = 0,
-    .graph_config = (void*)&ei_config_tflite_graph_8
+    .graph_config = (void*)&ei_config_tflite_graph_15
 };
 
 const uint8_t ei_learning_blocks_size = 1;
-const uint32_t ei_learning_block_8_inputs[1] = { 6 };
-const uint8_t ei_learning_block_8_inputs_size = 1;
+const uint32_t ei_learning_block_15_inputs[1] = { 14 };
+const uint8_t ei_learning_block_15_inputs_size = 1;
 const ei_learning_block_t ei_learning_blocks[ei_learning_blocks_size] = {
     {
-        8,
+        15,
         false,
         &run_nn_inference,
-        (void*)&ei_learning_block_config_8,
+        (void*)&ei_learning_block_config_15,
         EI_CLASSIFIER_IMAGE_SCALING_NONE,
-        ei_learning_block_8_inputs,
-        ei_learning_block_8_inputs_size,
-        7
+        ei_learning_block_15_inputs,
+        ei_learning_block_15_inputs_size,
+        5
     },
 };
 
@@ -126,11 +133,11 @@ const ei_impulse_t impulse_538705_0 = {
     .project_id = 538705,
     .project_owner = "Farras Rafi Permana",
     .project_name = "speech_recognition",
-    .impulse_id = 1,
-    .impulse_name = "Impulse #1",
-    .deploy_version = 35,
+    .impulse_id = 4,
+    .impulse_name = "Impulse #4",
+    .deploy_version = 52,
 
-    .nn_input_frame_size = 650,
+    .nn_input_frame_size = 800,
     .raw_sample_count = 16000,
     .raw_samples_per_frame = 1,
     .dsp_input_frame_size = 16000 * 1,
@@ -149,7 +156,7 @@ const ei_impulse_t impulse_538705_0 = {
     .visual_ad_grid_size_x = 0,
     .visual_ad_grid_size_y = 0,
     
-    .tflite_output_features_count = 7,
+    .tflite_output_features_count = 5,
     .learning_blocks_size = ei_learning_blocks_size,
     .learning_blocks = ei_learning_blocks,
 
@@ -164,7 +171,7 @@ const ei_impulse_t impulse_538705_0 = {
     .slices_per_model_window = 4,
 
     .has_anomaly = EI_ANOMALY_TYPE_UNKNOWN,
-    .label_count = 7,
+    .label_count = 5,
     .categories = ei_classifier_inferencing_categories,
     .object_detection_nms = ei_object_detection_nms
 };
@@ -172,4 +179,4 @@ const ei_impulse_t impulse_538705_0 = {
 ei_impulse_handle_t impulse_handle_538705_0 = ei_impulse_handle_t( &impulse_538705_0 );
 ei_impulse_handle_t& ei_default_impulse = impulse_handle_538705_0;
 
-#endif // _EI_CLASSIFIER_MODEL_METADATA_H_
+#endif // _EI_CLASSIFIER_MODEL_VARIABLES_H_
