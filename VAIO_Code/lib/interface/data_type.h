@@ -5,7 +5,6 @@
 
 enum ESPNOW_DataType {
   GYRO_SENSOR_DATA,
-  BUTTON_DATA,
   SPEECH_DATA,
 };
 

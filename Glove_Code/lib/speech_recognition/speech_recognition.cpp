@@ -256,7 +256,7 @@ int SpeechRecognition::i2s_init(uint32_t sampling_rate) {
       .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX),
       .sample_rate = sampling_rate,
       .bits_per_sample = (i2s_bits_per_sample_t)16,
-      .channel_format = I2S_CHANNEL_FMT_ONLY_RIGHT,
+      .channel_format = I2S_CHANNEL_FMT_ONLY_LEFT,
       .communication_format = I2S_COMM_FORMAT_I2S,
       .intr_alloc_flags = 0,
       .dma_buf_count = 8,

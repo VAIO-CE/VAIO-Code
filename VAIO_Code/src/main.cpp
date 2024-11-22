@@ -5,12 +5,14 @@ void setup()
 {
   Serial.begin(115200);
 
+  pinMode(LED_BUILTIN, OUTPUT);
+
   Setup::Wifi();
   Setup::ESPNOW();
-  Setup::WebServer();
+  //Setup::WebServer();
   Setup::Motors();
-  Setup::Ultrasonic();
-  Setup::Servo();
+  //Setup::Ultrasonic();
+  //Setup::Servo();
   // Setup::DS4();
   Setup::InitialTask();
 

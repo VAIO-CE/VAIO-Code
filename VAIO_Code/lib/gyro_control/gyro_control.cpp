@@ -3,7 +3,10 @@
 struct GyroSensor_Data GyroControl::gyroSensor_Data;
 
 void GyroControl::vTaskGestureControl(void * pvParameters){
+  int threshold = 10;
+  
   while(true){
+    digitalWrite(LED_BUILTIN, LOW);
 
     int rightMotorSpeed=0;
     int leftMotorSpeed=0;
@@ -16,7 +19,14 @@ void GyroControl::vTaskGestureControl(void * pvParameters){
     {
       motorDirection = -1;
     }
-
+    
+    if (abs(mappedYValue) < threshold) {
+        mappedYValue = 127;
+    }
+    if (abs(mappedXValue) < threshold) {
+      mappedXValue = 127;
+    }
+    
     rightMotorSpeed = abs(mappedYValue) - mappedXValue;
     leftMotorSpeed = abs(mappedYValue) + mappedXValue;
 
