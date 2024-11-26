@@ -18,10 +18,6 @@
 /* Local DNS */
 static const char *HOST = "vaio";
 
-/* ESP32 SSID & Password */
-static const char *SSID = "VAIO";
-static const char *PASSWORD = "skibiditoilet123";
-
 /* IP Address details */
 static const IPAddress LOCAL_IP(192, 168, 1, 1);
 static const IPAddress GATEWAY(192, 168, 1, 1);

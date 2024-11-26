@@ -11,6 +11,7 @@
 #include <ESPmDNS.h>
 #include <pin.h>
 #include <ds4_control.h>
+#include <secrets.h>
 
 class Setup
 {
