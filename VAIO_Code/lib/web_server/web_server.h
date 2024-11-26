@@ -6,11 +6,9 @@
 #include "master_control.h"
 #include "Update.h"
 
-class WebServer{
+class WebServer
+{
 public:
-    static String loginIndex;
-    static String updateIndex;
-    static String vaioIndex;
     static AsyncWebServer server;
 
     static void WebListener();

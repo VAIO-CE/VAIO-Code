@@ -5,9 +5,9 @@ void Setup::Wifi()
   // Set device as a Wi-Fi AP Station
   WiFi.mode(WIFI_AP_STA);
 
-  WiFi.softAP(SSID, PASSWORD);
+  WiFi.softAP(AP_SSID, AP_PASS, 1, 0, 1, false);
   WiFi.softAPConfig(LOCAL_IP, GATEWAY, SUBNET);
-  delay(100);
+  vTaskDelay(100 / portTICK_PERIOD_MS);
   Serial.println("WiFi started");
 
   Serial.print("[DEFAULT] ESP32 Board MAC Address: ");
@@ -17,23 +17,25 @@ void Setup::Wifi()
 void Setup::WebServer()
 {
 
-  /*use mdns for host name resolution*/
+  /*use MDNS for host name resolution*/
+  // http://vaio.local/
   if (!MDNS.begin(HOST))
-  { // http://esp32.local
+  {
     Serial.println("Error setting up MDNS responder!");
     while (1)
     {
-      delay(1000);
+      vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
   }
+
+  Serial.println("mDNS started!");
 
   WebServer::WebListener();
   WebServer::server.begin();
 
-  Serial.println("HTTP server started");
+  Serial.println("API server running. Connect at http://vaio.local/");
+  vTaskDelay(500 / portTICK_PERIOD_MS);
 }
-
-
 
 void Setup::ESPNOW()
 {
@@ -88,7 +90,7 @@ void Setup::DS4()
     Serial.println("MAC address fetch error!");
     delay(3000);
   }
-  
+
   DS4Control::preferences.end();
 
   // Connect

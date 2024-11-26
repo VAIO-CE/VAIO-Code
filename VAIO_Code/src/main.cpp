@@ -9,11 +9,11 @@ void setup()
 
   Setup::Wifi();
   Setup::ESPNOW();
-  //Setup::WebServer();
+  Setup::WebServer();
   Setup::Motors();
-  //Setup::Ultrasonic();
-  //Setup::Servo();
-  // Setup::DS4();
+  // Setup::Ultrasonic();
+  // Setup::Servo();
+  //  Setup::DS4();
   Setup::InitialTask();
 
   vTaskDelete(NULL);
