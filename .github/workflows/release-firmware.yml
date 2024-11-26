@@ -1,0 +1,48 @@
+name: Release Firmware CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install PlatformIO
+        run: pip install platformio
+        working-directory: ./VAIO-Code
+
+      - name: Build Firmware
+        run: platformio run
+        working-directory: ./VAIO-Code
+
+      - name: Create a Git Tag
+        run: |
+          TAG="v$(date +'%Y%m%d')-$(git rev-parse --short HEAD)"
+          git tag $TAG
+          git push origin $TAG
+        working-directory: .
+
+      - name: "Get Previous tag"
+        id: previous_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+
+      - name: Create a Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{steps.previous_tag.outputs.tag}}
+          files: ./VAIO-Code/.pio/build/VAIO_Code/firmware.bin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

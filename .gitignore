@@ -3,6 +3,3 @@
 .clang_complete
 .gcc-flags.json
 .pio
-
-secrets.*
-secrets
