@@ -22,11 +22,11 @@ jobs:
 
       - name: Install PlatformIO
         run: pip install platformio
-        working-directory: VAIO-Code
+        working-directory: VAIO_Code
 
       - name: Build Firmware
         run: platformio run
-        working-directory: VAIO-Code
+        working-directory: VAIO_Code
 
       - name: Create a Git Tag
         run: |
@@ -43,6 +43,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{steps.previous_tag.outputs.tag}}
-          files: VAIO-Code/.pio/build/VAIO_Code/firmware.bin
+          files: VAIO_Code/.pio/build/VAIO_Code/firmware.bin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
