@@ -42,24 +42,24 @@
 #include <stdint.h>
 #include "model_metadata.h"
 
-#include "tflite-model/tflite_learn_15.h"
+#include "tflite-model/tflite_learn_8.h"
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/engines.h"
 
 const char* ei_classifier_inferencing_categories[] = { "_noise", "_unknown", "control", "hand", "move" };
 
-ei_dsp_named_axis_t ei_dsp_config_14_named_axes[] = {
+ei_dsp_named_axis_t ei_dsp_config_6_named_axes[] = {
     { .name = "Signal", .axis = 0 }
 };
-size_t ei_dsp_config_14_named_axes_size = 1;
-uint8_t ei_dsp_config_14_axes[] = { 0 };
-const uint32_t ei_dsp_config_14_axes_size = 1;
-ei_dsp_config_mfcc_t ei_dsp_config_14 = {
-    14, // uint32_t blockId
+size_t ei_dsp_config_6_named_axes_size = 1;
+uint8_t ei_dsp_config_6_axes[] = { 0 };
+const uint32_t ei_dsp_config_6_axes_size = 1;
+ei_dsp_config_mfcc_t ei_dsp_config_6 = {
+    6, // uint32_t blockId
     4, // int implementationVersion
     1, // int length of axes
-    ei_dsp_config_14_named_axes, // named axes
-    ei_dsp_config_14_named_axes_size, // size of the named axes array
+    ei_dsp_config_6_named_axes, // named axes
+    ei_dsp_config_6_named_axes_size, // size of the named axes array
     16, // int num_cepstral
     0.02f, // float frame_length
     0.02f, // float frame_stride
@@ -74,28 +74,28 @@ ei_dsp_config_mfcc_t ei_dsp_config_14 = {
 
 const uint8_t ei_dsp_blocks_size = 1;
 ei_model_dsp_t ei_dsp_blocks[ei_dsp_blocks_size] = {
-    { // DSP block 14
-        14,
+    { // DSP block 6
+        6,
         800, // output size
         &extract_mfcc_features, // DSP function pointer
-        (void*)&ei_dsp_config_14, // pointer to config struct
-        ei_dsp_config_14_axes, // array of offsets into the input stream, one for each axis
-        ei_dsp_config_14_axes_size, // number of axes
+        (void*)&ei_dsp_config_6, // pointer to config struct
+        ei_dsp_config_6_axes, // array of offsets into the input stream, one for each axis
+        ei_dsp_config_6_axes_size, // number of axes
         1, // version
         nullptr, // factory function
     }
 };
-const ei_config_tflite_graph_t ei_config_tflite_graph_15 = {
+const ei_config_tflite_graph_t ei_config_tflite_graph_8 = {
     .implementation_version = 1,
-    .model = tflite_learn_15,
-    .model_size = tflite_learn_15_len,
-    .arena_size = tflite_learn_15_arena_size
+    .model = tflite_learn_8,
+    .model_size = tflite_learn_8_len,
+    .arena_size = tflite_learn_8_arena_size
 };
 
-const ei_learning_block_config_tflite_graph_t ei_learning_block_config_15 = {
+const ei_learning_block_config_tflite_graph_t ei_learning_block_config_8 = {
     .implementation_version = 1,
     .classification_mode = EI_CLASSIFIER_CLASSIFICATION_MODE_CLASSIFICATION,
-    .block_id = 15,
+    .block_id = 8,
     .object_detection = 0,
     .object_detection_last_layer = EI_CLASSIFIER_LAST_LAYER_UNKNOWN,
     .output_data_tensor = 0,
@@ -104,21 +104,21 @@ const ei_learning_block_config_tflite_graph_t ei_learning_block_config_15 = {
     .threshold = 0,
     .quantized = 1,
     .compiled = 0,
-    .graph_config = (void*)&ei_config_tflite_graph_15
+    .graph_config = (void*)&ei_config_tflite_graph_8
 };
 
 const uint8_t ei_learning_blocks_size = 1;
-const uint32_t ei_learning_block_15_inputs[1] = { 14 };
-const uint8_t ei_learning_block_15_inputs_size = 1;
+const uint32_t ei_learning_block_8_inputs[1] = { 6 };
+const uint8_t ei_learning_block_8_inputs_size = 1;
 const ei_learning_block_t ei_learning_blocks[ei_learning_blocks_size] = {
     {
-        15,
+        8,
         false,
         &run_nn_inference,
-        (void*)&ei_learning_block_config_15,
+        (void*)&ei_learning_block_config_8,
         EI_CLASSIFIER_IMAGE_SCALING_NONE,
-        ei_learning_block_15_inputs,
-        ei_learning_block_15_inputs_size,
+        ei_learning_block_8_inputs,
+        ei_learning_block_8_inputs_size,
         5
     },
 };
@@ -133,9 +133,9 @@ const ei_impulse_t impulse_538705_0 = {
     .project_id = 538705,
     .project_owner = "Farras Rafi Permana",
     .project_name = "speech_recognition",
-    .impulse_id = 4,
-    .impulse_name = "Impulse #4",
-    .deploy_version = 52,
+    .impulse_id = 1,
+    .impulse_name = "Impulse #1",
+    .deploy_version = 55,
 
     .nn_input_frame_size = 800,
     .raw_sample_count = 16000,
