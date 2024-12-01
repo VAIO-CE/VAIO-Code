@@ -10,17 +10,26 @@ void DS4Control::initializePreferences()
 
 void DS4Control::vTaskDS4Control(void *pvParamaters)
 {
+    int threshold = 20;
     while (true)
     {
+        digitalWrite(LED_BUILTIN, LOW);
+
         int yAxisValue{(ps4.data.analog.stick.ly)};
         int xAxisValue{(ps4.data.analog.stick.rx)};
 
         int throttle{map(yAxisValue, -127, 127, -255, 255)};
         int steering{map(xAxisValue, -127, 127, -255, 255)};
-        int motorDirection{1};
+        int motorDirection=1;
+
+        if (throttle < -threshold)
+        {
+          motorDirection = -1;
+        }
 
         int rightMotorSpeed{abs(throttle) - steering};
         int leftMotorSpeed{abs(throttle) + steering};
+
         rightMotorSpeed = constrain(rightMotorSpeed, 0, 255);
         leftMotorSpeed = constrain(leftMotorSpeed, 0, 255);
 

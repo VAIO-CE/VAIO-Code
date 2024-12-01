@@ -22,12 +22,9 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *inco
   case GYRO_SENSOR_DATA:
     memcpy(&GyroControl::gyroSensor_Data, data, sizeof(GyroSensor_Data));
     break;
-  // case BUTTON_DATA:
-  //   handleButtonPress(data);
-  //   break;
   case SPEECH_DATA:
     memcpy(&MasterControl::speechRecognition_Data, data, sizeof(SpeechRecognition_Data));
-    handleSpeechCommand();
+    //handleSpeechCommand();
     break;
   default:
     // Unknown data type
@@ -66,23 +63,6 @@ void MasterControl::setControlMode(ControlState mode)
   currentControlMode = mode;
 }
 
-// void MasterControl::handleButtonPress(const uint8_t *data)
-// {
-//   // For example, switch control modes based on button press data
-//   if (data[0] == 0x01)
-//   { // Button press data for switching to gyro control
-//     setControlMode(ControlState::GYRO_CONTROL);
-//   }
-//   else if (data[0] == 0x02)
-//   { // Button press data for switching to auto control
-//     setControlMode(ControlState::AUTO_CONTROL);
-//   }
-//   else if (data[0] == 0x03)
-//   {
-//     // Button press data for switching to DS4 control
-//     setControlMode(ControlState::DS4_CONTROL);
-//   }
-// }
 
 void MasterControl::handleSpeechCommand(){
   if (speechRecognition_Data.control > 0.7){
