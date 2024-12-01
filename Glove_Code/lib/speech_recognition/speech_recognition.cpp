@@ -6,7 +6,7 @@
 #endif
 
 #define EIDSP_QUANTIZE_FILTERBANK   0
-
+#define PRINT_DEBUG
 #define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW 2
 
 
@@ -26,7 +26,7 @@ void SpeechRecognition::setupSpeechRecognition(){
     // Serial.println("Edge Impulse Inferencing Demo");
 
     // summary of inferencing settings (from model_metadata.h)
-    // #ifdef PRINT_DEBUG
+    #ifdef PRINT_DEBUG
     ei_printf("Inferencing settings:\n");
     ei_printf("\tInterval: ");
     ei_printf_float((float)EI_CLASSIFIER_INTERVAL_MS);
@@ -34,7 +34,7 @@ void SpeechRecognition::setupSpeechRecognition(){
     ei_printf("\tFrame size: %d\n", EI_CLASSIFIER_DSP_INPUT_FRAME_SIZE);
     ei_printf("\tSample length: %d ms.\n", EI_CLASSIFIER_RAW_SAMPLE_COUNT / 16);
     ei_printf("\tNo. of classes: %d\n", sizeof(ei_classifier_inferencing_categories) / sizeof(ei_classifier_inferencing_categories[0]));
-    // #endif
+    #endif
 
     run_classifier_init();
     ei_printf("\nStarting continious inference in 2 seconds...\n");
@@ -82,7 +82,7 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters){
             }
             // if (++print_results >= (EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW)) {
                 // print the predictions
-            // #ifdef PRINT_DEBUG
+            #ifdef PRINT_DEBUG
                 ei_printf("Predictions ");
                 ei_printf("(DSP: %d ms., Classification: %d ms., Anomaly: %d ms.)",
                     result.timing.dsp, result.timing.classification, result.timing.anomaly);
@@ -92,7 +92,7 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters){
                     ei_printf_float(result.classification[ix].value);
                     ei_printf("\n");
                 }
-            // #endif
+            #endif
                 // }
             // #if EI_CLASSIFIER_HAS_ANOMALY == 1
             //         ei_printf("    anomaly score: ");
