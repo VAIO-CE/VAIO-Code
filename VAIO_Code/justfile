@@ -1,0 +1,8 @@
+set shell := ["cmd.exe", "/c"]
+# just build bro
+build:
+  pio run 
+monitor:
+  pio device monitor
+skibidi:
+  pio run --target upload

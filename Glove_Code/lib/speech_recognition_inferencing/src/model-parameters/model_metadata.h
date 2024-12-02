@@ -41,6 +41,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#ifdef __cplusplus
+#include <tuple>
+#endif
 #include "edge-impulse-sdk/classifier/ei_constants.h"
 
 #define EI_CLASSIFIER_NONE                       255
@@ -79,7 +82,7 @@
 #define EI_CLASSIFIER_PROJECT_ID                 538705
 #define EI_CLASSIFIER_PROJECT_OWNER              "Farras Rafi Permana"
 #define EI_CLASSIFIER_PROJECT_NAME               "speech_recognition"
-#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     52
+#define EI_CLASSIFIER_PROJECT_DEPLOY_VERSION     62
 #define EI_CLASSIFIER_NN_INPUT_FRAME_SIZE        800
 #define EI_CLASSIFIER_RAW_SAMPLE_COUNT           16000
 #define EI_CLASSIFIER_RAW_SAMPLES_PER_FRAME      1
@@ -105,7 +108,7 @@
 #define EI_CLASSIFIER_TFLITE_INPUT_DATATYPE         EI_CLASSIFIER_DATATYPE_INT8
 #define EI_CLASSIFIER_TFLITE_OUTPUT_DATATYPE        EI_CLASSIFIER_DATATYPE_INT8
 
-#define EI_CLASSIFIER_TFLITE_LARGEST_ARENA_SIZE  9971
+#define EI_CLASSIFIER_TFLITE_LARGEST_ARENA_SIZE  8185
 
 #define EI_CLASSIFIER_INFERENCING_ENGINE            EI_CLASSIFIER_TFLITE
 
@@ -142,7 +145,7 @@
 
 #define EI_STUDIO_VERSION_MAJOR             1
 #define EI_STUDIO_VERSION_MINOR             61
-#define EI_STUDIO_VERSION_PATCH             22
+#define EI_STUDIO_VERSION_PATCH             29
 
 #define EI_CLASSIFIER_HR_ENABLED            0
 
