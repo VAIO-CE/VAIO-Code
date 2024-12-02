@@ -83,9 +83,9 @@ void Setup::DS4()
 
   // For now, hardcode default value and emulate user previously sending MAC address
   // To-Do --> Remove default value with empty string and handle empty MAC address value
-  const char *btmac = DS4Control::preferences.getString("btmac", "d0:27:88:51:4c:50").c_str();
+  const char *btmac = DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
 
-  while (btmac == "")
+  while (btmac == "" || btmac == "empty")
   {
     Serial.println("MAC address fetch error!");
     delay(3000);
@@ -108,7 +108,7 @@ void Setup::DS4()
 void Setup::InitialTask()
 {
   // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  // xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
   Serial.println("Auto Control Initialized");
-  // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
 }
