@@ -15,7 +15,7 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *inco
   ESPNOW_DataType dataType = (ESPNOW_DataType)incomingData[0];
   const uint8_t *data = incomingData + 1;
   int dataLen = len - 1;
-  
+
   digitalWrite(LED_BUILTIN, HIGH);
   switch (dataType)
   {
@@ -24,13 +24,13 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *inco
     break;
   case SPEECH_DATA:
     memcpy(&MasterControl::speechRecognition_Data, data, sizeof(SpeechRecognition_Data));
-    //handleSpeechCommand();
+    handleSpeechCommand();
     break;
   default:
     // Unknown data type
     break;
   }
-  char* taskName = pcTaskGetTaskName(controlTaskHandle);
+  char *taskName = pcTaskGetTaskName(controlTaskHandle);
   printf("Control Changed to : %s\n", taskName);
 }
 
@@ -63,18 +63,21 @@ void MasterControl::setControlMode(ControlState mode)
   currentControlMode = mode;
 }
 
-
-void MasterControl::handleSpeechCommand(){
-  if (speechRecognition_Data.control > 0.7){
-      Serial.println("Heard: Control");
-      setControlMode(ControlState::DS4_CONTROL);
+void MasterControl::handleSpeechCommand()
+{
+  if (speechRecognition_Data.control > 0.7)
+  {
+    Serial.println("Heard: Control");
+    setControlMode(ControlState::DS4_CONTROL);
   }
-  if (speechRecognition_Data.hand > 0.7){
-      Serial.println("Heard: Hand");
-      setControlMode(ControlState::GYRO_CONTROL);
+  if (speechRecognition_Data.hand > 0.7)
+  {
+    Serial.println("Heard: Hand");
+    setControlMode(ControlState::GYRO_CONTROL);
   }
-  if (speechRecognition_Data.move > 0.55){
-      Serial.println("Heard: Move");
-      setControlMode(ControlState::AUTO_CONTROL);
+  if (speechRecognition_Data.move > 0.55)
+  {
+    Serial.println("Heard: Move");
+    setControlMode(ControlState::AUTO_CONTROL);
   }
 }
