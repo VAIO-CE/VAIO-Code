@@ -76,8 +76,7 @@ void Setup::Servo()
   AutoControl::servo1.write(115);
   Serial.println("Servo Pins Initialized");
 }
-
-void Setup::DS4()
+static void vTaskDS4Setup(void * pvParameters)
 {
   DS4Control::initializePreferences();
 
@@ -99,10 +98,16 @@ void Setup::DS4()
   while (!DS4Control::ps4.isConnected())
   {
     Serial.println("PS4 Controller Not Found!");
-    delay(300);
+    vTaskDelay(300 / portTICK_PERIOD_MS);
   }
 
   Serial.println("Ready & Connected!");
+  vTaskDelete(NULL);
+}
+
+void Setup::DS4()
+{
+  xTaskCreatePinnedToCore(vTaskDS4Setup, "DS4 Task Setup", STACK_SIZE * 2, NULL, 1, NULL, 1);
 }
 
 void Setup::InitialTask()
