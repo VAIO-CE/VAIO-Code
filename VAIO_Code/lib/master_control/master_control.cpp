@@ -65,17 +65,17 @@ void MasterControl::setControlMode(ControlState mode)
 
 void MasterControl::handleSpeechCommand()
 {
-  if (speechRecognition_Data.control > 0.7)
+  if (speechRecognition_Data.control > 0.5)
   {
     Serial.println("Heard: Control");
     setControlMode(ControlState::DS4_CONTROL);
   }
-  if (speechRecognition_Data.hand > 0.7)
+  if (speechRecognition_Data.hand > 0.5)
   {
     Serial.println("Heard: Hand");
     setControlMode(ControlState::GYRO_CONTROL);
   }
-  if (speechRecognition_Data.move > 0.55)
+  if (speechRecognition_Data.move > 0.5)
   {
     Serial.println("Heard: Move");
     setControlMode(ControlState::AUTO_CONTROL);
