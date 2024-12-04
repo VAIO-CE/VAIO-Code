@@ -15,19 +15,25 @@ enum class ControlState
   AUTO_CONTROL,
   GYRO_CONTROL,
   DS4_CONTROL,
+  STOP_STATE,
+  INTERCHANGE_STATE,
 };
 
 class MasterControl
 {
 public:
   static ControlState currentControlMode;
+  static ControlState previousControlMode;
   static TaskHandle_t controlTaskHandle;
   static struct SpeechRecognition_Data speechRecognition_Data;
+  static bool isInterchange;
 
   static void init();
   static void setControlMode(ControlState mode);
   static void handleButtonPress(const uint8_t *data);
-  static void handleSpeechCommand();
+  static void handleSpeechCommand(bool isInterchange);
+  static void vTaskStop(void *pvParameters);
+  static void vTaskInterchange(void *pvParameters);
   static void ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len);
 };
 

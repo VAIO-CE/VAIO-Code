@@ -32,6 +32,8 @@ void GyroSensor::vTaskGestureControl(void * pvParameters){
 
       vTaskDelay(100 / portTICK_PERIOD_MS);
 
+      
+
       // Send Gyro Sensor data to VAIO (using ESP-NOW)
       uint8_t data[1 + sizeof(GyroSensor_Data)];
       data[0] = GYRO_SENSOR_DATA; // Header byte to identify the data type
@@ -39,9 +41,11 @@ void GyroSensor::vTaskGestureControl(void * pvParameters){
 
       esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &data, sizeof(data));
 
+      //Serial.printf("X-axis: %d, Y-axis: %d\n",gyroSensor_Data.xAxisValue, gyroSensor_Data.yAxisValue);  
+
       #ifdef PRINT_DEBUG  
-        Serial.println(xAxisValue);  
-        Serial.println(yAxisValue);        
+        Serial.printf("X-axis: %d, Y-axis: %d\n",gyroSensor_Data.xAxisValue, gyroSensor_Data.yAxisValue);  
+        // Serial.println(yAxisValue);        
       #endif
     }
   }

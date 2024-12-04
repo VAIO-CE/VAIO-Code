@@ -22,6 +22,8 @@ struct SpeechRecognition_Data
   float hand;
   float on;
   float off;
+  float stop;
+  
 };
 
 #endif 

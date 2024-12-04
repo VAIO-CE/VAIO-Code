@@ -1,13 +1,13 @@
 #include <speech_recognition.h>
 #include <speech_recognition_inferencing.h>
+#include <gyro_sensor.h>
 
 #if !defined(EI_CLASSIFIER_SENSOR) || EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_MICROPHONE
     #error "Invalid model for current sensor."
 #endif
 
 #define EIDSP_QUANTIZE_FILTERBANK   0
-#define PRINT_DEBUG
-#define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW 2
+#define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW 1
 
 
 struct SpeechRecognition_Data SpeechRecognition::speechRecognition_Data;
@@ -68,17 +68,29 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters){
                 return;
             }
             // inference result
-            if (result.classification[2].value > 0.6){
+            if (result.classification[2].value > 0.5){
                 Serial.print("Heard: Control -> ");
                 Serial.println(result.classification[2].value);
             }
-            if (result.classification[3].value > 0.6){
+            if (result.classification[3].value > 0.5){
                 Serial.print("Heard: Hand ->");
                 Serial.println(result.classification[3].value);
             }
-            if (result.classification[4].value > 0.6){
+            if (result.classification[4].value > 0.5){
                 Serial.print("Heard: Move ->");
                 Serial.println(result.classification[4].value);
+            }
+            if (result.classification[5].value > 0.5){
+                Serial.print("Heard: Off ->");
+                Serial.println(result.classification[5].value);
+            }
+            if (result.classification[6].value > 0.5){
+                Serial.print("Heard: On ->");
+                Serial.println(result.classification[6].value);
+            }
+            if (result.classification[7].value > 0.5){
+                Serial.print("Heard: Stop ->");
+                Serial.println(result.classification[7].value);
             }
             // if (++print_results >= (EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW)) {
                 // print the predictions
@@ -104,17 +116,27 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters){
             // }
 
             // send data to ESP-NOW
-            speechRecognition_Data.move = result.classification[4].value;
+            
             speechRecognition_Data.control = result.classification[2].value;
             speechRecognition_Data.hand = result.classification[3].value;
-            speechRecognition_Data.on = result.classification[6].value;
+            speechRecognition_Data.move = result.classification[4].value;
             speechRecognition_Data.off = result.classification[5].value;
+            speechRecognition_Data.on = result.classification[6].value;
+            speechRecognition_Data.stop = result.classification[7].value;
+            
 
-            uint8_t data[1 + sizeof(SpeechRecognition_Data)];
-            data[0] = SPEECH_DATA; // Header byte to identify the data type
-            memcpy(data + 1, &speechRecognition_Data, sizeof(SpeechRecognition_Data));
+            if (GyroSensor::gyroSensor_Data.xAxisValue < 85){
+                digitalWrite(led_pin, HIGH);
+                uint8_t data[1 + sizeof(SpeechRecognition_Data)];
+                data[0] = SPEECH_DATA; // Header byte to identify the data type
+                memcpy(data + 1, &speechRecognition_Data, sizeof(SpeechRecognition_Data));
 
-            esp_err_t esp_now_result = esp_now_send(broadcastAddress, (uint8_t *) &data, sizeof(data));
+                esp_err_t esp_now_result = esp_now_send(broadcastAddress, (uint8_t *) &data, sizeof(data));
+            }
+            else{
+                digitalWrite(led_pin, LOW);
+            }
+            
         }
         vTaskDelay(portTICK_PERIOD_MS / 10);
     }

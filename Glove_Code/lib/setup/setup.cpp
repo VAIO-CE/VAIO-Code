@@ -113,7 +113,7 @@ void Setup::InitialTask(){
   xTaskCreatePinnedToCore(
     GyroSensor::vTaskGestureControl,
     "Hand Gesture Control",
-    STACK_SIZE, // Stack
+    STACK_SIZE * 2, // Stack
     NULL, // Parameter to pass function
     1, // Task Priority
     NULL, // Task Handle
