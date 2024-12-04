@@ -13,11 +13,7 @@ void setup()
   Setup::Motors();
   Setup::Ultrasonic();
   Setup::Servo();
-<<<<<<< HEAD
-  // Setup::DS4();
-=======
-  //  Setup::DS4();
->>>>>>> 59f73823e62ad685390be2bdfe22eb1dd0d8346e
+  Setup::DS4();
   Setup::InitialTask();
 
   vTaskDelete(NULL);
