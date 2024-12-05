@@ -22,6 +22,7 @@ public:
     static void Wifi();
     static void ESPNOW();
     static void WebServer();
+    static void LEDIndicators();
     static void Motors();
     static void Ultrasonic();
     static void Servo();

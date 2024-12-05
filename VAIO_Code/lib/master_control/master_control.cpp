@@ -5,6 +5,7 @@ TaskHandle_t MasterControl::controlTaskHandle = NULL;
 
 struct SpeechRecognition_Data MasterControl::speechRecognition_Data;
 
+
 void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len)
 {
   if (len < 1)
@@ -39,14 +40,23 @@ void MasterControl::setControlMode(ControlState mode)
   switch (mode)
   {
   case ControlState::AUTO_CONTROL:
+    digitalWrite(autoLEDPin, HIGH);
+    digitalWrite(gyroLEDPin, LOW);
+    digitalWrite(ds4LEDPin, LOW);
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Auto Control", STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   case ControlState::GYRO_CONTROL:
+    digitalWrite(autoLEDPin, LOW);
+    digitalWrite(gyroLEDPin, HIGH);
+    digitalWrite(ds4LEDPin, LOW);
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   case ControlState::DS4_CONTROL:
+    digitalWrite(autoLEDPin, LOW);
+    digitalWrite(gyroLEDPin, HIGH);
+    digitalWrite(ds4LEDPin, LOW);
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;

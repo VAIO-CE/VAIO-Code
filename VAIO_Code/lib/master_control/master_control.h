@@ -1,6 +1,7 @@
 #ifndef MASTER_CONTROL_H
 #define MASTER_CONTROL_H
 
+#include "pin.h"
 #include "data_type.h"
 #include "ds4_control.h"
 #include "auto_control.h"

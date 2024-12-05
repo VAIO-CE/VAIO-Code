@@ -1,3 +1,4 @@
+#include "pin.h"
 #include <setup.h>
 
 void Setup::Wifi() {
@@ -45,6 +46,15 @@ void Setup::ESPNOW() {
   // Receive data from ESP-NOW
   esp_now_register_recv_cb(
       esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
+}
+
+void Setup::LEDIndicators() {
+  // sets the pins as outputs:
+  pinMode(autoLEDPin, OUTPUT);
+  pinMode(gyroLEDPin, OUTPUT);
+  pinMode(ds4LEDPin, OUTPUT);
+
+  Serial.println("LED Pins Initialized");
 }
 
 void Setup::Motors() {
