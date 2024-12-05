@@ -7,12 +7,12 @@ void setup()
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Setup::Wifi();
-  Setup::ESPNOW();
-  Setup::WebServer();
-  Setup::Motors();
-  Setup::Ultrasonic();
-  Setup::Servo();
+//  Setup::Wifi();
+//  Setup::ESPNOW();
+//  Setup::WebServer();
+//  Setup::Motors();
+//  Setup::Ultrasonic();
+//  Setup::Servo();
   Setup::DS4();
   Setup::InitialTask();
 

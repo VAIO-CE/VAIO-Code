@@ -8,6 +8,34 @@ void DS4Control::initializePreferences()
     preferences.begin(MAC_ADDR_STORAGE_NAMESPACE, false);
 }
 
+void DS4Control::vTaskDS4Setup(void * pvParameters)
+{
+  DS4Control::initializePreferences();
+
+  const char *btmac = DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
+
+  while (btmac == "" || btmac == "empty")
+  {
+    Serial.println("MAC address fetch error!");
+    delay(3000);
+  }
+
+  DS4Control::preferences.end();
+
+  // Connect
+  DS4Control::ps4.begin(btmac);
+
+  while (!DS4Control::ps4.isConnected())
+  {
+    Serial.println("PS4 Controller Not Found!");
+    vTaskDelay(300 / portTICK_PERIOD_MS);
+  }
+
+  Serial.println("Ready & Connected!");
+  vTaskDelete(NULL);
+}
+
+
 void DS4Control::vTaskDS4Control(void *pvParamaters)
 {
     int threshold = 20;

@@ -76,38 +76,10 @@ void Setup::Servo()
   AutoControl::servo1.write(115);
   Serial.println("Servo Pins Initialized");
 }
-static void vTaskDS4Setup(void * pvParameters)
-{
-  DS4Control::initializePreferences();
-
-  // For now, hardcode default value and emulate user previously sending MAC address
-  // To-Do --> Remove default value with empty string and handle empty MAC address value
-  const char *btmac = DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
-
-  while (btmac == "" || btmac == "empty")
-  {
-    Serial.println("MAC address fetch error!");
-    delay(3000);
-  }
-
-  DS4Control::preferences.end();
-
-  // Connect
-  DS4Control::ps4.begin(btmac);
-
-  while (!DS4Control::ps4.isConnected())
-  {
-    Serial.println("PS4 Controller Not Found!");
-    vTaskDelay(300 / portTICK_PERIOD_MS);
-  }
-
-  Serial.println("Ready & Connected!");
-  vTaskDelete(NULL);
-}
 
 void Setup::DS4()
 {
-  xTaskCreatePinnedToCore(vTaskDS4Setup, "DS4 Task Setup", STACK_SIZE * 2, NULL, 1, NULL, 1);
+  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Setup, "DS4 Task Setup", STACK_SIZE * 2, NULL, 1, NULL, 1);
 }
 
 void Setup::InitialTask()

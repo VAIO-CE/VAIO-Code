@@ -3,4 +3,5 @@
 .clang_complete
 .gcc-flags.json
 .pio
+.cache
 compile_commands.json
