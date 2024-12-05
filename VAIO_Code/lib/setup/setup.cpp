@@ -1,4 +1,3 @@
-#include "pin.h"
 #include <setup.h>
 
 void Setup::Wifi() {
@@ -49,6 +48,7 @@ void Setup::ESPNOW() {
 }
 
 void Setup::LEDIndicators() {
+
   // sets the pins as outputs:
   pinMode(autoLEDPin, OUTPUT);
   pinMode(gyroLEDPin, OUTPUT);
@@ -58,6 +58,14 @@ void Setup::LEDIndicators() {
 }
 
 void Setup::Motors() {
+
+  // configure PWM
+  ledcSetup(motorPWMLeft, PWM_Frequency, PWM_Resolution);
+  ledcAttachPin(motorPWMLeft, motorPWMLeft);
+
+  ledcSetup(motorPWMRight, PWM_Frequency, PWM_Resolution);
+  ledcAttachPin(motorPWMRight, motorPWMRight);
+
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);
   pinMode(motorRightPin2, OUTPUT);
@@ -74,8 +82,8 @@ void Setup::Ultrasonic() {
 }
 
 void Setup::Servo() {
-  AutoControl::servo1.attach(servoPin);
-  AutoControl::servo1.write(115);
+  AutoControl::servo.attach(servoPin);
+  AutoControl::servo.write(115);
   Serial.println("Servo Pins Initialized");
 }
 

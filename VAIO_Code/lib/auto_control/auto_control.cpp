@@ -1,7 +1,8 @@
-#include "freertos/FreeRTOS.h"
+#include "esp32-hal-ledc.h"
+#include "pin.h"
 #include <auto_control.h>
 
-Servo AutoControl::servo1;
+Servo AutoControl::servo;
 int AutoControl::dutyCycle = 60;
 float AutoControl::distance = 100.0f;
 
@@ -26,6 +27,7 @@ void AutoControl::moveInc() {
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW);
   while (dutyCycle <= 255) {
+    ledcWrite(motorPWMRight, dutyCycle);
     dutyCycle = dutyCycle + 5;
     vTaskDelay(500 / portTICK_RATE_MS);
     delay(500);
@@ -67,20 +69,20 @@ void AutoControl::moveStop() {
 }
 
 int AutoControl::lookRight() {
-  servo1.write(40);
+  servo.write(40);
   vTaskDelay(500 / portTICK_RATE_MS);
   int distance = readDistance();
   vTaskDelay(100 / portTICK_RATE_MS);
-  servo1.write(115);
+  servo.write(115);
   return distance;
 }
 int AutoControl::lookLeft() {
-  servo1.write(190);
+  servo.write(190);
   vTaskDelay(500 / portTICK_RATE_MS);
-  servo1.write(115);
+  servo.write(115);
   int distance = readDistance();
   vTaskDelay(100 / portTICK_RATE_MS);
-  servo1.write(115);
+  servo.write(115);
   return distance;
 }
 int AutoControl::readDistance() {

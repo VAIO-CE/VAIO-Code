@@ -15,6 +15,7 @@
 #include <esp_arduino_version.h>
 #include <web_server.h>
 #include <ESPmDNS.h>
+#include <esp32-hal-ledc.h>
 
 class Setup
 {

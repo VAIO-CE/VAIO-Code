@@ -8,9 +8,9 @@
 #define SOUND_SPEED 0.034
 #define CM_TO_INCH 0.393701
 
-// sets speed of DC  motors
-#define MAX_SPEED 190
-#define MAX_SPEED_OFFSET 20
+// Setting PWM properties
+#define PWM_Frequency 30000
+#define PWM_Resolution  8
 
 // FreeRTOS Task
 #define STACK_SIZE 2048
