@@ -15,6 +15,8 @@
 // FreeRTOS Task
 #define STACK_SIZE 2048
 
+#include "IPAddress.h"
+
 /* Local DNS */
 static const char *HOST = "vaio";
 

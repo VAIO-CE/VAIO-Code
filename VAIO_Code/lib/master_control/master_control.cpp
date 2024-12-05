@@ -39,21 +39,15 @@ void MasterControl::setControlMode(ControlState mode)
   switch (mode)
   {
   case ControlState::AUTO_CONTROL:
-    // Stop the current task
     vTaskDelete(controlTaskHandle);
-    // Start the auto control task
     xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Auto Control", STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   case ControlState::GYRO_CONTROL:
-    // Stop the current task
     vTaskDelete(controlTaskHandle);
-    // Start the gyro control task
     xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   case ControlState::DS4_CONTROL:
-    // Stop the current task
     vTaskDelete(controlTaskHandle);
-    // Start the DS4 control task
     xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   default:

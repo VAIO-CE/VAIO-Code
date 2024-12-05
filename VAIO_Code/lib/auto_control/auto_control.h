@@ -1,10 +1,11 @@
 #ifndef AUTO_CONTROL_H
 #define AUTO_CONTROL_H
 
+#include "pin.h"
+#include "constants.h"
+
 #include "Arduino.h"
 #include <ESP32Servo.h>
-#include <pin.h>
-#include <constants.h>
 
 
 class AutoControl{

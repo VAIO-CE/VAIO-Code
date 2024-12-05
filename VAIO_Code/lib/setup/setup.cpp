@@ -1,7 +1,6 @@
 #include <setup.h>
 
-void Setup::Wifi()
-{
+void Setup::Wifi() {
   // Set device as a Wi-Fi AP Station
   WiFi.mode(WIFI_AP_STA);
 
@@ -14,16 +13,13 @@ void Setup::Wifi()
   Serial.println(WiFi.macAddress());
 }
 
-void Setup::WebServer()
-{
+void Setup::WebServer() {
 
   /*use MDNS for host name resolution*/
   // http://vaio.local/
-  if (!MDNS.begin(HOST))
-  {
+  if (!MDNS.begin(HOST)) {
     Serial.println("Error setting up MDNS responder!");
-    while (1)
-    {
+    while (1) {
       vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
   }
@@ -37,11 +33,9 @@ void Setup::WebServer()
   vTaskDelay(500 / portTICK_PERIOD_MS);
 }
 
-void Setup::ESPNOW()
-{
+void Setup::ESPNOW() {
   // Init ESP-NOW
-  if (esp_now_init() != ESP_OK)
-  {
+  if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
@@ -49,11 +43,11 @@ void Setup::ESPNOW()
   Serial.println("ESP-NOW started");
 
   // Receive data from ESP-NOW
-  esp_now_register_recv_cb(esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
+  esp_now_register_recv_cb(
+      esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
 }
 
-void Setup::Motors()
-{
+void Setup::Motors() {
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);
   pinMode(motorRightPin2, OUTPUT);
@@ -63,29 +57,38 @@ void Setup::Motors()
   Serial.println("Motor Pins Initialized");
 }
 
-void Setup::Ultrasonic()
-{
+void Setup::Ultrasonic() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT);  // Sets the echoPin as an Input
   Serial.println("Ultrasonic Pins Initialized");
 }
 
-void Setup::Servo()
-{
+void Setup::Servo() {
   AutoControl::servo1.attach(servoPin);
   AutoControl::servo1.write(115);
   Serial.println("Servo Pins Initialized");
 }
 
-void Setup::DS4()
-{
-  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Setup, "DS4 Task Setup", STACK_SIZE * 2, NULL, 1, NULL, 1);
+void Setup::DS4() {
+  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Setup, "DS4 Task Setup",
+                          STACK_SIZE * 2, NULL, 1, NULL, 1);
 }
 
-void Setup::InitialTask()
-{
-  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  // xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+void testTask(void *parameter) {
+  while (1) {
+    Serial.println("Testing");
+    vTaskDelay(10 / portTICK_PERIOD_MS);
+  }
+}
+
+void Setup::InitialTask() {
+  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control",
+  // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  // xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
+  // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
   Serial.println("Auto Control Initialized");
-  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  xTaskCreatePinnedToCore(testTask, "DS4 Control", 2 * STACK_SIZE, NULL, 1,
+                          NULL, 0);
+  // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 *
+  // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
 }

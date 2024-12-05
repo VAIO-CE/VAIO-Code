@@ -1,7 +1,7 @@
 #ifndef DATA_TYPE_H
 #define DATA_TYPE_H
 
-#include <cstddef>
+#include <cstdint>
 
 enum ESPNOW_DataType {
   GYRO_SENSOR_DATA,
@@ -15,7 +15,7 @@ struct GyroSensor_Data
   uint8_t yAxisValue;
 };
 
-struct SpeechRecognition_Data
+ struct SpeechRecognition_Data
 {
   float move;
   float control;
