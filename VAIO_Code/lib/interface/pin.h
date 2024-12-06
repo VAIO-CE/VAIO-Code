@@ -1,11 +1,13 @@
 #ifndef PIN_H
 #define PIN_H
 
+// Vacuum Button
+#define vacuumPin 22
 
 // LED Indicators
+#define ds4LEDPin 21
 #define autoLEDPin 19
 #define gyroLEDPin 18
-#define ds4LEDPin 5
 
 // Ultrasonic
 #define trigPin 12
