@@ -1,3 +1,4 @@
+#include "master_control.h"
 #include <setup.h>
 
 void Setup::Wifi() {
@@ -92,21 +93,13 @@ void Setup::DS4() {
                           STACK_SIZE * 2, NULL, 1, NULL, 1);
 }
 
-void testTask(void *parameter) {
-  while (1) {
-    Serial.println("Testing");
-    vTaskDelay(10 / portTICK_PERIOD_MS);
-  }
-}
-
 void Setup::InitialTask() {
+  MasterControl::changeLEDIndicator(ControlState::GYRO_CONTROL);
   // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control",
   // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
   // xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
   // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  Serial.println("Auto Control Initialized");
-  xTaskCreatePinnedToCore(testTask, "DS4 Control", 2 * STACK_SIZE, NULL, 1,
-                          NULL, 0);
   // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 *
   // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  Serial.println("Task Initialized");
 }

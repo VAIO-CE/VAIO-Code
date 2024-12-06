@@ -25,16 +25,16 @@ enum class ControlState
 class MasterControl
 {
 private:
-  static ControlState currentControlMode;
   static TaskHandle_t controlTaskHandle;
   static struct SpeechRecognition_Data speechRecognition_Data;
 
   static void init();
-  static void handleButtonPress(const uint8_t *data);
+  static void handleButtons(const uint8_t *data);
   static void handleSpeechCommand();
 
 public:
   static void setControlMode(ControlState mode);
+  static void changeLEDIndicator(ControlState mode);
   static void ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len);
 };
 
