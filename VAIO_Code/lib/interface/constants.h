@@ -1,16 +1,19 @@
 #ifndef CONSTANT_H
 #define CONSTANT_H
 
-// This is signal timeout in milli seconds.
-#define SIGNAL_TIMEOUT 500
-
 // define sound speed in cm/uS
 #define SOUND_SPEED 0.034
 #define CM_TO_INCH 0.393701
 
 // Setting PWM properties
+#define PWM_Channel_Left 1
+#define PWM_Channel_Right 2
 #define PWM_Frequency 30000
 #define PWM_Resolution  8
+
+//Setting Motor Speed properties
+#define MIN_SPEED_MOTOR 155
+#define MAX_SPEED_MOTOR 255
 
 // FreeRTOS Task
 #define STACK_SIZE 2048

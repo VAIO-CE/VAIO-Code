@@ -2,6 +2,7 @@
 #define MOTOR_H
 
 #include "pin.h"
+#include "constants.h"
 #include <Arduino.h>
 #include <esp32-hal-ledc.h>
 

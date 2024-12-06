@@ -3,7 +3,7 @@
 struct GyroSensor_Data GyroControl::gyroSensor_Data;
 
 void GyroControl::vTaskGestureControl(void *pvParameters) {
-  int threshold = 50;
+  int threshold = 30;
 
   while (true) {
 

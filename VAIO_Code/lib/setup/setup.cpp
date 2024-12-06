@@ -1,3 +1,4 @@
+#include "constants.h"
 #include "master_control.h"
 #include <setup.h>
 
@@ -61,11 +62,11 @@ void Setup::LEDIndicators() {
 void Setup::Motors() {
 
   // configure PWM
-  ledcSetup(motorPWMLeft, PWM_Frequency, PWM_Resolution);
-  ledcAttachPin(motorPWMLeft, motorPWMLeft);
+  ledcSetup(PWM_Channel_Left, PWM_Frequency, PWM_Resolution);
+  ledcAttachPin(motorPWMLeftPin, PWM_Channel_Left);
 
-  ledcSetup(motorPWMRight, PWM_Frequency, PWM_Resolution);
-  ledcAttachPin(motorPWMRight, motorPWMRight);
+  ledcSetup(PWM_Channel_Right, PWM_Frequency, PWM_Resolution);
+  ledcAttachPin(motorPWMRightPin, PWM_Channel_Right);
 
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);

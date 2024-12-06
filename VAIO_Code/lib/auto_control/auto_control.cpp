@@ -1,3 +1,4 @@
+#include "constants.h"
 #include "esp32-hal-ledc.h"
 #include "pin.h"
 #include <auto_control.h>
@@ -27,7 +28,7 @@ void AutoControl::moveInc() {
   digitalWrite(motorLeftPin1, HIGH);
   digitalWrite(motorLeftPin2, LOW);
   while (dutyCycle <= 255) {
-    ledcWrite(motorPWMRight, dutyCycle);
+    ledcWrite(PWM_Channel_Right, dutyCycle);
     dutyCycle = dutyCycle + 5;
     vTaskDelay(500 / portTICK_RATE_MS);
     delay(500);

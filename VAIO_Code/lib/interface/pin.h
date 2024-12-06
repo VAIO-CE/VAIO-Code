@@ -14,12 +14,12 @@
 #define echoPin 13
 
 // Motor A
-#define motorPWMRight 27
+#define motorPWMRightPin 27
 #define motorRightPin1 26
 #define motorRightPin2 25
 
 // Motor B
-#define motorPWMLeft 23
+#define motorPWMLeftPin 23
 #define motorLeftPin1 33 
 #define motorLeftPin2 32 
 

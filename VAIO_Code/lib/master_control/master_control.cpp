@@ -22,11 +22,11 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   case SPEECH_DATA:
     memcpy(&MasterControl::speechRecognition_Data, data,
            sizeof(SpeechRecognition_Data));
-    handleSpeechCommand();
+    //handleSpeechCommand();
     break;
   }
   char *taskName = pcTaskGetTaskName(controlTaskHandle);
-  printf("Control Changed to : %s\n", taskName);
+ // printf("Control Changed to : %s\n", taskName);
 }
 
 void MasterControl::setControlMode(ControlState mode) {
