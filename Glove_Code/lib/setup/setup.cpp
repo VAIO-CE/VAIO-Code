@@ -1,3 +1,4 @@
+#include "pin.h"
 #include <setup.h>
 // #include <speech_recognition_inferencing.h>
 
@@ -100,8 +101,9 @@ void Setup::MPU6050(){
   }
 }
 
-void Setup::Button(){
-  pinMode(buttonPin, INPUT);
+void Setup::Buttons(){
+  pinMode(voice_button_pin, INPUT);
+  pinMode(vacuum_button_pin, INPUT);
 }
 
 

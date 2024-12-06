@@ -1,4 +1,6 @@
 #include "master_control.h"
+#include "esp32-hal-gpio.h"
+#include "pin.h"
 
 TaskHandle_t MasterControl::controlTaskHandle = NULL;
 
@@ -10,11 +12,11 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
     // Invalid data length
     return;
   }
+
   ESPNOW_DataType dataType = (ESPNOW_DataType)incomingData[0];
   const uint8_t *data = incomingData + 1;
   int dataLen = len - 1;
 
-  digitalWrite(LED_BUILTIN, HIGH);
   switch (dataType) {
   case GYRO_SENSOR_DATA:
     memcpy(&GyroControl::gyroSensor_Data, data, sizeof(GyroSensor_Data));
@@ -22,11 +24,24 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   case SPEECH_DATA:
     memcpy(&MasterControl::speechRecognition_Data, data,
            sizeof(SpeechRecognition_Data));
-    //handleSpeechCommand();
+    handleSpeechCommand();
+    break;
+  case VACUUM_DATA:
+    handleVacuumToggle(data);
     break;
   }
   char *taskName = pcTaskGetTaskName(controlTaskHandle);
- // printf("Control Changed to : %s\n", taskName);
+  // printf("Control Changed to : %s\n", taskName);
+}
+
+void MasterControl::handleVacuumToggle(const uint8_t *data) {
+  if (data[0] == 0x01) {
+    Serial.println("Turn Off Vacuum");
+    digitalWrite(vacuumPin, LOW);
+  } else if (data[0] == 0x02) {
+    Serial.println("Turn On Vacuum");
+    digitalWrite(vacuumPin, HIGH);
+  }
 }
 
 void MasterControl::setControlMode(ControlState mode) {

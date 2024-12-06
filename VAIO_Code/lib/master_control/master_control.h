@@ -28,7 +28,7 @@ private:
   static struct SpeechRecognition_Data speechRecognition_Data;
 
   static void init();
-  static void handleButtons(const uint8_t *data);
+  static void handleVacuumToggle(const uint8_t *data);
   static void handleSpeechCommand();
 
 public:

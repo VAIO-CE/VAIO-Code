@@ -6,9 +6,14 @@
 enum ESPNOW_DataType {
   GYRO_SENSOR_DATA,
   SPEECH_DATA,
+  VACUUM_DATA,
 };
 
-/// @brief Gyroscope data from ESP-NOW
+struct Vacuum_Data
+{
+  uint8_t data;    
+};
+
 struct GyroSensor_Data
 {
   uint8_t xAxisValue;    

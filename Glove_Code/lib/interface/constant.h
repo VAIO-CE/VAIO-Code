@@ -5,8 +5,6 @@
 
 #define STACK_SIZE 2048
 
-// #define PRINT_DEBUG
-
 // ESP32 VAIO Address
 //static uint8_t broadcastAddress[] = {0xC4, 0xDE, 0xE2, 0x1F, 0x88, 0x84};
 static uint8_t broadcastAddress[] = {0xBC, 0xDD, 0xC2, 0xCD, 0x22, 0x54};

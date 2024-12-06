@@ -31,7 +31,6 @@ void AutoControl::moveInc() {
     ledcWrite(PWM_Channel_Right, dutyCycle);
     dutyCycle = dutyCycle + 5;
     vTaskDelay(500 / portTICK_RATE_MS);
-    delay(500);
   }
   dutyCycle = 60;
 }
