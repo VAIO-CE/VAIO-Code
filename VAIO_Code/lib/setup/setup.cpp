@@ -1,4 +1,5 @@
 #include "constants.h"
+#include "gyro_control.h"
 #include "master_control.h"
 #include <setup.h>
 
@@ -60,6 +61,10 @@ void Setup::LEDIndicators() {
 }
 
 void Setup::Motors() {
+
+  // Center Gyro data at initial
+  GyroControl::gyroSensor_Data.xAxisValue = 127;
+  GyroControl::gyroSensor_Data.yAxisValue = 127;
 
   // configure PWM
   ledcSetup(PWM_Channel_Left, PWM_Frequency, PWM_Resolution);
