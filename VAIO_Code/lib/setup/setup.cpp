@@ -1,7 +1,9 @@
+#include "constants.h"
+#include "gyro_control.h"
+#include "master_control.h"
 #include <setup.h>
 
-void Setup::Wifi()
-{
+void Setup::Wifi() {
   // Set device as a Wi-Fi AP Station
   WiFi.mode(WIFI_AP_STA);
 
@@ -14,16 +16,13 @@ void Setup::Wifi()
   Serial.println(WiFi.macAddress());
 }
 
-void Setup::WebServer()
-{
+void Setup::WebServer() {
 
   /*use MDNS for host name resolution*/
   // http://vaio.local/
-  if (!MDNS.begin(HOST))
-  {
+  if (!MDNS.begin(HOST)) {
     Serial.println("Error setting up MDNS responder!");
-    while (1)
-    {
+    while (1) {
       vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
   }
@@ -37,11 +36,9 @@ void Setup::WebServer()
   vTaskDelay(500 / portTICK_PERIOD_MS);
 }
 
-void Setup::ESPNOW()
-{
+void Setup::ESPNOW() {
   // Init ESP-NOW
-  if (esp_now_init() != ESP_OK)
-  {
+  if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
   }
@@ -49,11 +46,33 @@ void Setup::ESPNOW()
   Serial.println("ESP-NOW started");
 
   // Receive data from ESP-NOW
-  esp_now_register_recv_cb(esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
+  esp_now_register_recv_cb(
+      esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
 }
 
-void Setup::Motors()
-{
+void Setup::LEDIndicators() {
+
+  // sets the pins as outputs:
+  pinMode(autoLEDPin, OUTPUT);
+  pinMode(gyroLEDPin, OUTPUT);
+  pinMode(ds4LEDPin, OUTPUT);
+
+  Serial.println("LED Pins Initialized");
+}
+
+void Setup::Motors() {
+
+  // Center Gyro data at initial
+  GyroControl::gyroSensor_Data.xAxisValue = 127;
+  GyroControl::gyroSensor_Data.yAxisValue = 127;
+
+  // configure PWM
+  ledcSetup(PWM_Channel_Left, PWM_Frequency, PWM_Resolution);
+  ledcAttachPin(motorPWMLeftPin, PWM_Channel_Left);
+
+  ledcSetup(PWM_Channel_Right, PWM_Frequency, PWM_Resolution);
+  ledcAttachPin(motorPWMRightPin, PWM_Channel_Right);
+
   // sets the pins as outputs:
   pinMode(motorRightPin1, OUTPUT);
   pinMode(motorRightPin2, OUTPUT);
@@ -63,52 +82,30 @@ void Setup::Motors()
   Serial.println("Motor Pins Initialized");
 }
 
-void Setup::Ultrasonic()
-{
+void Setup::Ultrasonic() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT);  // Sets the echoPin as an Input
   Serial.println("Ultrasonic Pins Initialized");
 }
 
-void Setup::Servo()
-{
-  AutoControl::servo1.attach(servoPin);
-  AutoControl::servo1.write(115);
+void Setup::Servo() {
+  AutoControl::servo.attach(servoPin);
+  AutoControl::servo.write(115);
   Serial.println("Servo Pins Initialized");
 }
 
-void Setup::DS4()
-{
-  DS4Control::initializePreferences();
-
-  // For now, hardcode default value and emulate user previously sending MAC address
-  // To-Do --> Remove default value with empty string and handle empty MAC address value
-  const char *btmac = DS4Control::preferences.getString("btmac", "d0:27:88:51:4c:50").c_str();
-
-  while (btmac == "")
-  {
-    Serial.println("MAC address fetch error!");
-    delay(3000);
-  }
-
-  DS4Control::preferences.end();
-
-  // Connect
-  DS4Control::ps4.begin(btmac);
-
-  while (!DS4Control::ps4.isConnected())
-  {
-    Serial.println("PS4 Controller Not Found!");
-    delay(300);
-  }
-
-  Serial.println("Ready & Connected!");
+void Setup::DS4() {
+  xTaskCreatePinnedToCore(DS4Control::vTaskDS4Setup, "DS4 Task Setup",
+                          STACK_SIZE * 2, NULL, 1, NULL, 1);
 }
 
-void Setup::InitialTask()
-{
-  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-  Serial.println("Auto Control Initialized");
-  // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+void Setup::InitialTask() {
+  MasterControl::changeLEDIndicator(ControlState::GYRO_CONTROL);
+  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control",
+  // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+   xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
+   STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 *
+  // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  Serial.println("Task Initialized");
 }

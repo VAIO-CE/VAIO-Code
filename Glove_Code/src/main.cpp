@@ -2,14 +2,14 @@
 
 void setup() {
   Serial.begin(115200);
-  pinMode(led_pin, OUTPUT);
+  
+  pinMode(LED_BUILTIN, OUTPUT);
   Setup::ESPNOW();
   Setup::MPU6050();
+  Setup::Buttons();
   Setup::SpeechRecognition();
   Setup::InitialTask();
-  
 }
  
 void loop() {
-  
 }

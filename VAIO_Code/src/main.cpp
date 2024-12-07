@@ -1,25 +1,21 @@
+#include "setup.h"
 #include <Arduino.h>
-#include <setup.h>
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
-
-  pinMode(LED_BUILTIN, OUTPUT);
 
   Setup::Wifi();
   Setup::ESPNOW();
   Setup::WebServer();
+  Setup::LEDIndicators();
   Setup::Motors();
-  Setup::Ultrasonic();
-  Setup::Servo();
-  //  Setup::DS4();
+  //  Setup::Ultrasonic();
+  //  Setup::Servo();
+  // Setup::DS4();
   Setup::InitialTask();
 
   vTaskDelete(NULL);
 }
 
-void loop()
-{
-  // Handled by FreeRTOS
+void loop() {
 }

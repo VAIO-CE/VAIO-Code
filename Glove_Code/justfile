@@ -5,4 +5,4 @@ build:
 monitor:
   pio device monitor
 skibidi:
-  pio run --target upload
+  pio run --target upload --target monitor

@@ -1,21 +1,26 @@
 #ifndef DATA_TYPE_H
 #define DATA_TYPE_H
 
-#include <cstddef>
+#include <cstdint>
 
 enum ESPNOW_DataType {
   GYRO_SENSOR_DATA,
   SPEECH_DATA,
+  VACUUM_DATA,
 };
 
-/// @brief Gyroscope data from ESP-NOW
+struct Vacuum_Data
+{
+  uint8_t data;    
+};
+
 struct GyroSensor_Data
 {
   uint8_t xAxisValue;    
   uint8_t yAxisValue;
 };
 
-struct SpeechRecognition_Data
+ struct SpeechRecognition_Data
 {
   float move;
   float control;

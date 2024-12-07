@@ -1,3 +1,4 @@
+#include "pin.h"
 #include <setup.h>
 // #include <speech_recognition_inferencing.h>
 
@@ -100,8 +101,9 @@ void Setup::MPU6050(){
   }
 }
 
-void Setup::Button(){
-  pinMode(buttonPin, INPUT);
+void Setup::Buttons(){
+  pinMode(voice_button_pin, INPUT);
+  pinMode(vacuum_button_pin, INPUT);
 }
 
 
@@ -114,6 +116,16 @@ void Setup::InitialTask(){
     GyroSensor::vTaskGestureControl,
     "Hand Gesture Control",
     STACK_SIZE * 2, // Stack
+    NULL, // Parameter to pass function
+    1, // Task Priority
+    NULL, // Task Handle
+    0 // CPU core
+  );
+
+  xTaskCreatePinnedToCore(
+    Vacuum::vTaskVacuumControl,
+    "Vacuumh Control",
+    STACK_SIZE, // Stack
     NULL, // Parameter to pass function
     1, // Task Priority
     NULL, // Task Handle
