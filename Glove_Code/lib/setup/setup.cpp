@@ -123,6 +123,16 @@ void Setup::InitialTask(){
   );
 
   xTaskCreatePinnedToCore(
+    Vacuum::vTaskVacuumControl,
+    "Vacuumh Control",
+    STACK_SIZE, // Stack
+    NULL, // Parameter to pass function
+    1, // Task Priority
+    NULL, // Task Handle
+    0 // CPU core
+  );
+
+  xTaskCreatePinnedToCore(
     SpeechRecognition::vTaskSpeechRecognition,
     "Voice Recognition Task",
     STACK_SIZE * 8,

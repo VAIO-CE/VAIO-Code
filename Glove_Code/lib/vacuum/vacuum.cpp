@@ -4,6 +4,7 @@ uint8_t Vacuum::buttonToggleData = 0x01;
 void Vacuum::transmitVacuumData() {
   // Prepare the data to be sent
   buttonToggleData = (buttonToggleData == 0x01) ? 0x02 : 0x01;
+  Serial.println("Send Vacuum Data\n");
 
   uint8_t data[1 + sizeof(buttonToggleData)];
   data[0] = VACUUM_DATA;
@@ -11,9 +12,6 @@ void Vacuum::transmitVacuumData() {
 
   // Send the data using ESP-NOW
   esp_err_t result = esp_now_send(broadcastAddress, data, sizeof(data));
-  if (result != ESP_OK) {
-    Serial.println("Error sending button data");
-  }
 }
 
 void Vacuum::vTaskVacuumControl(void *pvParameters) {
@@ -41,5 +39,7 @@ void Vacuum::vTaskVacuumControl(void *pvParameters) {
     }
 
     lastButtonState = reading;
+
+    vTaskDelay(50 / portTICK_PERIOD_MS);
   }
 }
