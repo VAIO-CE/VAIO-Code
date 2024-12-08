@@ -6,9 +6,9 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
   Setup::ESPNOW();
-  //  Setup::MPU6050();
+  Setup::MPU6050();
   Setup::Buttons();
-  //  Setup::SpeechRecognition();
+  Setup::SpeechRecognition();
   Setup::InitialTask();
   vTaskDelete(NULL);
 }

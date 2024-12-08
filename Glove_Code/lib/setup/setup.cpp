@@ -128,13 +128,13 @@ void Setup::InitialTask() {
   //    0 // CPU core
   //  );
 
-  //  xTaskCreatePinnedToCore(
-  //    SpeechRecognition::vTaskSpeechRecognition,
-  //    "Voice Recognition Task",
-  //    STACK_SIZE * 8,
-  //    NULL,
-  //    1,
-  //    NULL,
-  //    1
-  //  );
+    xTaskCreatePinnedToCore(
+      SpeechRecognition::vTaskSpeechRecognition,
+      "Voice Recognition Task",
+      STACK_SIZE * 8,
+      NULL,
+      1,
+      NULL,
+      1
+    );
 }

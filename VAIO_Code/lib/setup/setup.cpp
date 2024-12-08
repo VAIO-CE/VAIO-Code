@@ -119,25 +119,6 @@ void Setup::InitialTask() {
       ControlState::GYRO_CONTROL; // Change this depending on the inital state
   esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
 
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
-  MasterControl::controlData[0] =
-      ControlState::AUTO_CONTROL; // Change this depending on the inital state
-  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
-
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
-  MasterControl::controlData[0] =
-      ControlState::DS4_CONTROL; // Change this depending on the inital state
-  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
-
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
-  MasterControl::controlData[0] =
-      ControlState::GYRO_CONTROL; // Change this depending on the inital state
-  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
-
-  vTaskDelay(1000 / portTICK_PERIOD_MS);
-  MasterControl::controlData[0] =
-      ControlState::GYRO_CONTROL; // Change this depending on the inital state
-  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
   MasterControl::changeLEDIndicator(ControlState::GYRO_CONTROL);
 
   // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic
