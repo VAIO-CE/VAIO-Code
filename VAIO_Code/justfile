@@ -4,5 +4,7 @@ build:
   pio run 
 monitor:
   pio device monitor
+compile:
+  pio run -t compiledb
 skibidi:
   pio run --target upload --target monitor

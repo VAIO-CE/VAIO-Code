@@ -1,13 +1,23 @@
 #include "master_control.h"
-#include "esp32-hal-gpio.h"
-#include "pin.h"
 
+uint8_t MasterControl::controlData[1] = {GYRO_CONTROL};  
 TaskHandle_t MasterControl::controlTaskHandle = NULL;
 
 struct SpeechRecognition_Data MasterControl::speechRecognition_Data;
 
+void MasterControl::ESPNOW_OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
+  if (status == ESP_NOW_SEND_FAIL) {
+    Serial.println("ESPNow Delivery --> Glove: Fail");
+    Serial.println("Resending Packet to Glove...");
+  esp_now_send(GloveAddress, (uint8_t *)&controlData, sizeof(controlData));
+  } else {
+    Serial.println("ESPNow Delivery --> Glove: Success");
+  }
+}
+
 void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
                                          const uint8_t *incomingData, int len) {
+  Serial.println("Received Data");
   if (len < 1) {
     // Invalid data length
     return;
@@ -29,12 +39,15 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   case VACUUM_DATA:
     handleVacuumToggle(data);
     break;
+  default:
+    Serial.println("Unknown Data\n");
   }
   char *taskName = pcTaskGetTaskName(controlTaskHandle);
-  // printf("Control Changed to : %s\n", taskName);
+   printf("Control Changed to : %s\n", taskName);
 }
 
 void MasterControl::handleVacuumToggle(const uint8_t *data) {
+  Serial.println("Toggle Vacuum");
   if (data[0] == 0x01) {
     Serial.println("Turn Off Vacuum");
     digitalWrite(vacuumPin, LOW);
@@ -45,23 +58,31 @@ void MasterControl::handleVacuumToggle(const uint8_t *data) {
 }
 
 void MasterControl::setControlMode(ControlState mode) {
+
   switch (mode) {
-  case ControlState::AUTO_CONTROL:
+  case AUTO_CONTROL:
+    controlData[0] = AUTO_CONTROL;
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Auto Control",
                             STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
-  case ControlState::GYRO_CONTROL:
+  case GYRO_CONTROL:
+    controlData[0] = GYRO_CONTROL;
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
                             STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
-  case ControlState::DS4_CONTROL:
+  case DS4_CONTROL:
+    controlData[0] = DS4_CONTROL;
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
                             2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
   }
+
+  Serial.println("Send Change State to Glove");
+  esp_now_send(GloveAddress, (uint8_t *)&controlData,
+               sizeof(controlData)); // Send state changes to Glove
 }
 
 void MasterControl::changeLEDIndicator(ControlState mode) {

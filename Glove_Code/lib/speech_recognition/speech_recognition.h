@@ -1,9 +1,10 @@
 #ifndef SPEECHRECOGNITION_H
 #define SPEECHRECOGNITION_H
 
-#include <pin.h>
-#include <constant.h>
-#include <data_types.h>
+#include "pin.h"
+#include "constant.h"
+#include "data_types.h"
+
 #include <driver/i2s.h>
 #include <esp_now.h>
 

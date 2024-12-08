@@ -1,7 +1,8 @@
-#include "constants.h"
-#include "gyro_control.h"
+#include "setup.h"
+#include "Arduino.h"
 #include "master_control.h"
-#include <setup.h>
+
+esp_now_peer_info_t Setup::peerInfo;
 
 void Setup::Wifi() {
   // Set device as a Wi-Fi AP Station
@@ -43,8 +44,20 @@ void Setup::ESPNOW() {
     return;
   }
 
-  Serial.println("ESP-NOW started");
+  // Once ESPNow is successfully Init, we will register for Send CB to
+  // get the status of Trasnmitted packet
+  esp_now_register_send_cb(MasterControl::ESPNOW_OnDataSent);
 
+  // Register peer
+  memcpy(peerInfo.peer_addr, GloveAddress, 6);
+  peerInfo.channel = 0;
+  peerInfo.encrypt = false;
+
+  // Add peer
+  if (esp_now_add_peer(&peerInfo) != ESP_OK) {
+    Serial.println("Failed to add peer");
+    return;
+  }
   // Receive data from ESP-NOW
   esp_now_register_recv_cb(
       esp_now_recv_cb_t(MasterControl::ESPNOW_OnDataReceive));
@@ -100,12 +113,41 @@ void Setup::DS4() {
 }
 
 void Setup::InitialTask() {
+
+  // Send Initial Control State to Glove Code
+  MasterControl::controlData[0] =
+      ControlState::GYRO_CONTROL; // Change this depending on the inital state
+  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
+
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  MasterControl::controlData[0] =
+      ControlState::AUTO_CONTROL; // Change this depending on the inital state
+  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
+
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  MasterControl::controlData[0] =
+      ControlState::DS4_CONTROL; // Change this depending on the inital state
+  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
+
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  MasterControl::controlData[0] =
+      ControlState::GYRO_CONTROL; // Change this depending on the inital state
+  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
+
+  vTaskDelay(1000 / portTICK_PERIOD_MS);
+  MasterControl::controlData[0] =
+      ControlState::GYRO_CONTROL; // Change this depending on the inital state
+  esp_now_send(GloveAddress, (uint8_t *)&MasterControl::controlData, sizeof(MasterControl::controlData));
   MasterControl::changeLEDIndicator(ControlState::GYRO_CONTROL);
-  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic Control",
-  // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
-   xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
-   STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+
+  // xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Automatic
+  // Control", STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
+                          STACK_SIZE, NULL, 1,
+                          &MasterControl::controlTaskHandle, 0);
   // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control", 2 *
   // STACK_SIZE, NULL, 1, &MasterControl::controlTaskHandle, 0);
+  // Send Gyro Sensor data to VAIO (using ESP-NOW)
+
   Serial.println("Task Initialized");
 }

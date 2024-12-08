@@ -1,7 +1,8 @@
-#include "esp32-hal-gpio.h"
-#include "pins_arduino.h"
-#include <speech_recognition.h>
-#include <speech_recognition_inferencing.h>
+#include "speech_recognition.h"
+#include "speech_recognition_inferencing.h"
+
+#include <esp32-hal-gpio.h>
+#include <pins_arduino.h>
 
 #if !defined(EI_CLASSIFIER_SENSOR) ||                                          \
     EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_MICROPHONE
