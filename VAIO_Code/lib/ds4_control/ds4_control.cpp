@@ -3,48 +3,59 @@
 ps4Controller DS4Control::ps4;
 Preferences DS4Control::preferences;
 
-void DS4Control::initializePreferences() {
+void DS4Control::initializePreferences()
+{
   preferences.begin(MAC_ADDR_STORAGE_NAMESPACE, false);
 }
 
-void DS4Control::vTaskDS4Setup(void *pvParameters) {
-  DS4Control::initializePreferences();
+// void DS4Control::vTaskDS4Setup(void *pvParameters)
+// {
+//   DS4Control::initializePreferences();
 
-  const char *btmac =
-      DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
+//   const char *btmac =
+//       DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
 
-  while (btmac == "" || btmac == "empty") {
-    Serial.println("MAC address fetch error!");
-    delay(3000);
-  }
+//   while (btmac == "" || btmac == "empty")
+//   {
+//     Serial.println("MAC address fetch error!");
+//     delay(3000);
+//   }
 
-  DS4Control::preferences.end();
+//   DS4Control::preferences.end();
+//   DS4Control::ps4.attach(DS4Control::vTaskDS4Control);
+//   DS4Control::ps4.attachOnConnect(DS4Control::onConnect);
+//   DS4Control::ps4.attachOnDisconnect(DS4Control::onDisconnect);
 
-  // Connect
-  DS4Control::ps4.begin(btmac);
+//   // Connect
+//   DS4Control::ps4.begin(btmac);
 
-  while (!DS4Control::ps4.isConnected()) {
-    Serial.println("PS4 Controller Not Found!");
-    vTaskDelay(300 / portTICK_PERIOD_MS);
-  }
+//   while (!DS4Control::ps4.isConnected())
+//   {
+//     Serial.println("PS4 Controller Not Found!");
+//     vTaskDelay(300 / portTICK_PERIOD_MS);
+//   }
 
-  Serial.println("Ready & Connected!");
-  vTaskDelete(NULL);
-}
+//   vTaskDelay(500 / portTICK_PERIOD_MS);
 
-void DS4Control::vTaskDS4Control(void *pvParamaters) {
-  int threshold = 20;
-  while (true) {
+//   // vTaskDelete(NULL);
+// }
+
+void DS4Control::vTaskDS4Control(void *pvParameters)
+{
+  Serial.println("Masuk notify callback");
+  while (true)
+  {
     digitalWrite(LED_BUILTIN, LOW);
 
-    int yAxisValue{-(ps4.data.analog.stick.ly)};
+    int yAxisValue{(ps4.data.analog.stick.ly)};
     int xAxisValue{(ps4.data.analog.stick.rx)};
 
-    int throttle{map(yAxisValue, -127, 127, -255, 255)};
+    int throttle{map(yAxisValue, 127, -127, -255, 255)};
     int steering{map(xAxisValue, -127, 127, -255, 255)};
     int motorDirection = 1;
 
-    if (throttle < -threshold) {
+    if (throttle < 0)
+    {
       motorDirection = -1;
     }
 
@@ -55,15 +66,16 @@ void DS4Control::vTaskDS4Control(void *pvParamaters) {
     leftMotorSpeed = constrain(leftMotorSpeed, 0, 255);
 
     Motor::rotateMotor(rightMotorSpeed * motorDirection,
-                              leftMotorSpeed * motorDirection);
+                       leftMotorSpeed * motorDirection);
 
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    vTaskDelay(5 / portTICK_PERIOD_MS);
   }
 }
 
 void DS4Control::onConnect() { Serial.println("DS4 Connected!"); }
 
-void DS4Control::onDisconnect() {
+void DS4Control::onDisconnect()
+{
   Motor::rotateMotor(0, 0);
   Serial.println("DS4 Disconnected!");
 }

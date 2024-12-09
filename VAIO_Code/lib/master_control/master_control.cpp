@@ -16,9 +16,10 @@ void MasterControl::ESPNOW_OnDataSent(const uint8_t *mac_addr, esp_now_send_stat
 }
 
 void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
-                                         const uint8_t *incomingData, int len) {
-  Serial.println("Received Data");
-  if (len < 1) {
+                                         const uint8_t *incomingData, int len)
+{
+  if (len < 1)
+  {
     // Invalid data length
     return;
   }
@@ -27,7 +28,8 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   const uint8_t *data = incomingData + 1;
   int dataLen = len - 1;
 
-  switch (dataType) {
+  switch (dataType)
+  {
   case GYRO_SENSOR_DATA:
     memcpy(&GyroControl::gyroSensor_Data, data, sizeof(GyroSensor_Data));
     break;
@@ -43,24 +45,30 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
     Serial.println("Unknown Data\n");
   }
   char *taskName = pcTaskGetTaskName(controlTaskHandle);
-   printf("Control Changed to : %s\n", taskName);
+  printf("Control Changed to : %s\n", taskName);
 }
 
-void MasterControl::handleVacuumToggle(const uint8_t *data) {
-  Serial.println("Toggle Vacuum");
-  if (data[0] == 0x01) {
+void MasterControl::handleVacuumToggle(const uint8_t *data)
+{
+  Serial.print("test_sent");
+  if (data[0] == 0x01)
+  {
     Serial.println("Turn Off Vacuum");
     digitalWrite(vacuumPin, LOW);
-  } else if (data[0] == 0x02) {
+  }
+  else if (data[0] == 0x02)
+  {
     Serial.println("Turn On Vacuum");
     digitalWrite(vacuumPin, HIGH);
   }
 }
 
-void MasterControl::setControlMode(ControlState mode) {
-
-  switch (mode) {
-  case AUTO_CONTROL:
+void MasterControl::setControlMode(ControlState mode)
+{
+  Motor::rotateMotor(0, 0);
+  switch (mode)
+  {
+  case ControlState::AUTO_CONTROL:
     controlData[0] = AUTO_CONTROL;
     vTaskDelete(controlTaskHandle);
     xTaskCreatePinnedToCore(AutoControl::vTaskAutoControl, "Auto Control",
@@ -72,12 +80,13 @@ void MasterControl::setControlMode(ControlState mode) {
     xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
                             STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
-  case DS4_CONTROL:
-    controlData[0] = DS4_CONTROL;
-    vTaskDelete(controlTaskHandle);
-    xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
-                            2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
-    break;
+    // case ControlState::DS4_CONTROL:
+    // controlData[0] = DS4_CONTROL;
+    //   DS4Control::ps4.begin("D0:27:88:51:4C:50");
+    //   vTaskDelete(controlTaskHandle);
+    //   xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
+    //                           2 * STACK_SIZE, NULL, 2, &controlTaskHandle, 0);
+    //   break;
   }
 
   Serial.println("Send Change State to Glove");
@@ -85,34 +94,40 @@ void MasterControl::setControlMode(ControlState mode) {
                sizeof(controlData)); // Send state changes to Glove
 }
 
-void MasterControl::changeLEDIndicator(ControlState mode) {
+void MasterControl::changeLEDIndicator(ControlState mode)
+{
   digitalWrite(autoLEDPin, LOW);
   digitalWrite(gyroLEDPin, LOW);
   digitalWrite(ds4LEDPin, LOW);
 
-  switch (mode) {
+  switch (mode)
+  {
   case ControlState::AUTO_CONTROL:
     digitalWrite(autoLEDPin, HIGH);
     break;
   case ControlState::GYRO_CONTROL:
     digitalWrite(gyroLEDPin, HIGH);
     break;
-  case ControlState::DS4_CONTROL:
-    digitalWrite(ds4LEDPin, HIGH);
-    break;
+    // case ControlState::DS4_CONTROL:
+    //   digitalWrite(ds4LEDPin, HIGH);
+    //   break;
   }
 }
 
-void MasterControl::handleSpeechCommand() {
-  if (speechRecognition_Data.control > 0.5) {
-    changeLEDIndicator(ControlState::DS4_CONTROL);
-    setControlMode(ControlState::DS4_CONTROL);
-  }
-  if (speechRecognition_Data.hand > 0.5) {
+void MasterControl::handleSpeechCommand()
+{
+  // if (speechRecognition_Data.control > 0.5)
+  // {
+  //   changeLEDIndicator(ControlState::DS4_CONTROL);
+  //   setControlMode(ControlState::DS4_CONTROL);
+  // }
+  if (speechRecognition_Data.hand > 0.5)
+  {
     changeLEDIndicator(ControlState::GYRO_CONTROL);
     setControlMode(ControlState::GYRO_CONTROL);
   }
-  if (speechRecognition_Data.move > 0.5) {
+  if (speechRecognition_Data.move > 0.5)
+  {
     changeLEDIndicator(ControlState::AUTO_CONTROL);
     setControlMode(ControlState::AUTO_CONTROL);
   }
