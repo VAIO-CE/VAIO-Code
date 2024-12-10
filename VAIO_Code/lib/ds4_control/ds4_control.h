@@ -15,7 +15,7 @@ public:
     static Preferences preferences;
 
     static void initializePreferences();
-    static void vTaskDS4Setup(void *pvParameters);
+    // static void vTaskDS4Setup(void *pvParameters);
     static void vTaskDS4Control(void *pvParameters);
     static void onConnect();
     static void onDisconnect();

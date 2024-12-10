@@ -7,10 +7,10 @@ esp_now_peer_info_t Setup::peerInfo;
 void Setup::Wifi()
 {
   // Set device as a Wi-Fi AP Station
-  WiFi.mode(WIFI_AP_STA);
+  WiFi.mode(WIFI_STA);
 
-  WiFi.softAP(AP_SSID, AP_PASS, 1, 0, 1, false);
-  WiFi.softAPConfig(LOCAL_IP, GATEWAY, SUBNET);
+  // WiFi.softAP(AP_SSID, AP_PASS, 1, 0, 1, false);
+  // WiFi.softAPConfig(LOCAL_IP, GATEWAY, SUBNET);
   vTaskDelay(100 / portTICK_PERIOD_MS);
   Serial.println("WiFi started");
 
@@ -34,8 +34,8 @@ void Setup::WebServer()
 
   Serial.println("mDNS started!");
 
-  WebServer::WebListener();
-  WebServer::server.begin();
+  // WebServer::WebListener();
+  // WebServer::server.begin();
 
   Serial.println("API server running. Connect at http://vaio.local/");
   vTaskDelay(500 / portTICK_PERIOD_MS);

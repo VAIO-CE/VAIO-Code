@@ -12,8 +12,8 @@ void DS4Control::vTaskDS4Setup(void *pvParameters)
 {
   DS4Control::initializePreferences();
 
-  const char *btmac =
-      DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
+  //   const char *btmac =
+  //       DS4Control::preferences.getString("btmac", "D0:27:88:51:4C:50").c_str();
 
   while (btmac == "" || btmac == "empty")
   {
@@ -21,7 +21,10 @@ void DS4Control::vTaskDS4Setup(void *pvParameters)
     delay(3000);
   }
 
-  DS4Control::preferences.end();
+  //   DS4Control::preferences.end();
+  //   DS4Control::ps4.attach(DS4Control::vTaskDS4Control);
+  //   DS4Control::ps4.attachOnConnect(DS4Control::onConnect);
+  //   DS4Control::ps4.attachOnDisconnect(DS4Control::onDisconnect);
 
   DS4Control::ps4.attachOnConnect(DS4Control::onConnect);
   DS4Control::ps4.attachOnDisconnect(DS4Control::onDisconnect);
@@ -71,7 +74,7 @@ void DS4Control::vTaskDS4Control(void *pvParamaters)
     Motor::rotateMotor(rightMotorSpeed * motorDirection,
                        leftMotorSpeed * motorDirection);
 
-    vTaskDelay(10 / portTICK_PERIOD_MS);
+    vTaskDelay(5 / portTICK_PERIOD_MS);
   }
 }
 
