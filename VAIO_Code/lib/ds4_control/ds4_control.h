@@ -7,6 +7,7 @@
 
 #include <Preferences.h>
 #include <ps4Controller.h>
+#include <master_control.h>
 
 class DS4Control
 {

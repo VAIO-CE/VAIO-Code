@@ -3,7 +3,7 @@
 
 void Motor::rotateMotor(int rightMotorSpeed, int leftMotorSpeed)
 {
-  Serial.println("Motor rotated");
+  // Serial.println("Motor rotated");
 
   int leftSpeed = map(abs(leftMotorSpeed), 0, 255, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);
   int rightSpeed = map(abs(rightMotorSpeed), 0, 255, MIN_SPEED_MOTOR, MAX_SPEED_MOTOR);

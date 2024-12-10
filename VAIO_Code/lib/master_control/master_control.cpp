@@ -2,6 +2,8 @@
 
 uint8_t MasterControl::controlData[1] = {GYRO_CONTROL};
 TaskHandle_t MasterControl::controlTaskHandle = NULL;
+ControlState currentState = GYRO_CONTROL;
+ControlState prevState = currentState;
 
 struct SpeechRecognition_Data MasterControl::speechRecognition_Data;
 
@@ -40,6 +42,7 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   case SPEECH_DATA:
     memcpy(&MasterControl::speechRecognition_Data, data,
            sizeof(SpeechRecognition_Data));
+    Serial.println("Speech Data Received");
     handleSpeechCommand();
     break;
   case VACUUM_DATA:
@@ -48,7 +51,8 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   default:
     Serial.println("Unknown Data\n");
   }
-  char *taskName = pcTaskGetTaskName(controlTaskHandle);
+
+  char *taskName = pcTaskGetTaskName(MasterControl::controlTaskHandle);
   printf("Control Changed to : %s\n", taskName);
 }
 
@@ -70,6 +74,12 @@ void MasterControl::handleVacuumToggle(const uint8_t *data)
 void MasterControl::setControlMode(ControlState mode)
 {
   Motor::rotateMotor(0, 0);
+
+  // if (prevState == ControlState::DS4_CONTROL)
+  // {
+  //   DS4Control::ps4.end();
+  // }
+
   switch (mode)
   {
   case ControlState::AUTO_CONTROL:
@@ -86,13 +96,17 @@ void MasterControl::setControlMode(ControlState mode)
     break;
   case ControlState::DS4_CONTROL:
     controlData[0] = DS4_CONTROL;
-    // DS4Control::ps4.begin("D0:27:88:51:4C:50");
     vTaskDelete(controlTaskHandle);
-    xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
-                            2 * STACK_SIZE, NULL, 2, &controlTaskHandle, 0);
+    Serial.println("Ganti");
+    xTaskCreatePinnedToCore(DS4Control::vTaskDS4Setup, "DS4 Task Setup",
+                            STACK_SIZE * 2, NULL, 1, NULL, 0);
+    // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
+    //                         2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
+    Serial.println("Tahap 4");
     break;
   }
 
+  currentState = mode;
   Serial.println("Send Change State to Glove");
   esp_now_send(GloveAddress, (uint8_t *)&controlData,
                sizeof(controlData)); // Send state changes to Glove
@@ -112,19 +126,20 @@ void MasterControl::changeLEDIndicator(ControlState mode)
   case ControlState::GYRO_CONTROL:
     digitalWrite(gyroLEDPin, HIGH);
     break;
-    // case ControlState::DS4_CONTROL:
-    //   digitalWrite(ds4LEDPin, HIGH);
-    //   break;
+  case ControlState::DS4_CONTROL:
+    digitalWrite(ds4LEDPin, HIGH);
+    break;
   }
 }
 
 void MasterControl::handleSpeechCommand()
 {
-  // if (speechRecognition_Data.control > 0.5)
-  // {
-  //   changeLEDIndicator(ControlState::DS4_CONTROL);
-  //   setControlMode(ControlState::DS4_CONTROL);
-  // }
+  prevState = currentState;
+  if (speechRecognition_Data.control > 0.5)
+  {
+    changeLEDIndicator(ControlState::DS4_CONTROL);
+    setControlMode(ControlState::DS4_CONTROL);
+  }
   if (speechRecognition_Data.hand > 0.5)
   {
     changeLEDIndicator(ControlState::GYRO_CONTROL);

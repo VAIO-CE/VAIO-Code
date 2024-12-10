@@ -1,7 +1,6 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-
 #include "secrets.h"
 #include "pin.h"
 #include "constants.h"
@@ -18,7 +17,8 @@
 #include <esp_arduino_version.h>
 #include <esp_now.h>
 
-class Setup {
+class Setup
+{
 public:
   static esp_now_peer_info_t peerInfo;
   static void Wifi();

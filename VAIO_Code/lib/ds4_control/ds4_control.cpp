@@ -38,6 +38,8 @@ void DS4Control::vTaskDS4Setup(void *pvParameters)
     vTaskDelay(300 / portTICK_PERIOD_MS);
   }
 
+  xTaskCreatePinnedToCore(vTaskDS4Control, "DS4 Control", 2 * STACK_SIZE, NULL, 1, &(MasterControl::controlTaskHandle), 0);
+
   vTaskDelete(NULL);
 }
 
