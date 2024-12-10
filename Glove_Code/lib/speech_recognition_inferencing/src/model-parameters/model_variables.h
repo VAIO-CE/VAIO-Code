@@ -46,7 +46,7 @@
 #include "edge-impulse-sdk/classifier/ei_model_types.h"
 #include "edge-impulse-sdk/classifier/inferencing_engines/engines.h"
 
-const char* ei_classifier_inferencing_categories[] = { "_noise", "_unknown", "control", "hand", "move" };
+const char* ei_classifier_inferencing_categories[] = { "_noise", "_unknown", "control", "hand", "move", "off", "on", "stop" };
 
 ei_dsp_named_axis_t ei_dsp_config_6_named_axes[] = {
     { .name = "Signal", .axis = 0 }
@@ -119,7 +119,7 @@ const ei_learning_block_t ei_learning_blocks[ei_learning_blocks_size] = {
         EI_CLASSIFIER_IMAGE_SCALING_NONE,
         ei_learning_block_8_inputs,
         ei_learning_block_8_inputs_size,
-        5
+        8
     },
 };
 
@@ -135,7 +135,7 @@ const ei_impulse_t impulse_538705_0 = {
     .project_name = "speech_recognition",
     .impulse_id = 1,
     .impulse_name = "Impulse #1",
-    .deploy_version = 62,
+    .deploy_version = 74,
 
     .nn_input_frame_size = 800,
     .raw_sample_count = 16000,
@@ -156,7 +156,7 @@ const ei_impulse_t impulse_538705_0 = {
     .visual_ad_grid_size_x = 0,
     .visual_ad_grid_size_y = 0,
     
-    .tflite_output_features_count = 5,
+    .tflite_output_features_count = 8,
     .learning_blocks_size = ei_learning_blocks_size,
     .learning_blocks = ei_learning_blocks,
 
@@ -171,7 +171,7 @@ const ei_impulse_t impulse_538705_0 = {
     .slices_per_model_window = 4,
 
     .has_anomaly = EI_ANOMALY_TYPE_UNKNOWN,
-    .label_count = 5,
+    .label_count = 8,
     .categories = ei_classifier_inferencing_categories,
     .object_detection_nms = ei_object_detection_nms
 };

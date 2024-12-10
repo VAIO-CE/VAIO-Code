@@ -129,6 +129,15 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters) {
 
             esp_err_t esp_now_result =
                 esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
+
+              if (esp_now_result == ESP_OK) {
+                Serial.println("Sent voice data success");
+              }
+              else {
+                Serial.println("Error sending the voice data");
+              }
+
+              
       }
       else {
         digitalWrite(LED_BUILTIN, LOW );
