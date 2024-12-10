@@ -12,7 +12,7 @@ void setup()
   Setup::Motors();
   Setup::Ultrasonic();
   Setup::Servo();
-  // Setup::DS4();
+  Setup::DS4();
   pinMode(vacuumPin, OUTPUT);
   digitalWrite(vacuumPin, HIGH);
   Setup::InitialTask();

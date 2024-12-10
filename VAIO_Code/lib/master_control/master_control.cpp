@@ -1,16 +1,20 @@
 #include "master_control.h"
 
-uint8_t MasterControl::controlData[1] = {GYRO_CONTROL};  
+uint8_t MasterControl::controlData[1] = {GYRO_CONTROL};
 TaskHandle_t MasterControl::controlTaskHandle = NULL;
 
 struct SpeechRecognition_Data MasterControl::speechRecognition_Data;
 
-void MasterControl::ESPNOW_OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  if (status == ESP_NOW_SEND_FAIL) {
+void MasterControl::ESPNOW_OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
+{
+  if (status == ESP_NOW_SEND_FAIL)
+  {
     Serial.println("ESPNow Delivery --> Glove: Fail");
     Serial.println("Resending Packet to Glove...");
-  esp_now_send(GloveAddress, (uint8_t *)&controlData, sizeof(controlData));
-  } else {
+    esp_now_send(GloveAddress, (uint8_t *)&controlData, sizeof(controlData));
+  }
+  else
+  {
     Serial.println("ESPNow Delivery --> Glove: Success");
   }
 }
@@ -80,13 +84,13 @@ void MasterControl::setControlMode(ControlState mode)
     xTaskCreatePinnedToCore(GyroControl::vTaskGestureControl, "Gyro Control",
                             STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
     break;
-    // case ControlState::DS4_CONTROL:
-    // controlData[0] = DS4_CONTROL;
-    //   DS4Control::ps4.begin("D0:27:88:51:4C:50");
-    //   vTaskDelete(controlTaskHandle);
-    //   xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
-    //                           2 * STACK_SIZE, NULL, 2, &controlTaskHandle, 0);
-    //   break;
+  case ControlState::DS4_CONTROL:
+    controlData[0] = DS4_CONTROL;
+    // DS4Control::ps4.begin("D0:27:88:51:4C:50");
+    vTaskDelete(controlTaskHandle);
+    xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
+                            2 * STACK_SIZE, NULL, 2, &controlTaskHandle, 0);
+    break;
   }
 
   Serial.println("Send Change State to Glove");
