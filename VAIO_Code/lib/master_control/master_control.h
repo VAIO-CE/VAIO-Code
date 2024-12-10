@@ -9,18 +9,11 @@
 
 #include <Arduino.h>
 #include <stdint.h>
+#include <esp_now.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <Preferences.h>
 #include <ps4Controller.h>
-
-// Define ENUM for control states
-enum class ControlState
-{
-  AUTO_CONTROL,
-  GYRO_CONTROL,
-  DS4_CONTROL,
-};
 
 class MasterControl
 {
@@ -32,10 +25,12 @@ private:
   static void handleSpeechCommand();
 
 public:
+  static uint8_t controlData[1];
   static TaskHandle_t controlTaskHandle;
   static void setControlMode(ControlState mode);
   static void changeLEDIndicator(ControlState mode);
   static void ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len);
+  static void ESPNOW_OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 };
 
 #endif

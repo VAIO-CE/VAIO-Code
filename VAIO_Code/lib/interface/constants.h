@@ -23,6 +23,11 @@
 /* Local DNS */
 static const char *HOST = "vaio";
 
+/* MAC Address Glove */
+ static const uint8_t GloveAddress[] = {0x14, 0x2B, 0x2F, 0xD7, 0x64, 0x3C}; // Original Glove Address
+// static const uint8_t GloveAddress[] = {0xC4, 0xDE, 0xE2, 0x1F, 0x88, 0x84}; // Seno Glove Address
+
+
 /* IP Address details */
 static const IPAddress LOCAL_IP(192, 168, 1, 1);
 static const IPAddress GATEWAY(192, 168, 1, 1);

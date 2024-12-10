@@ -2,6 +2,13 @@
 #define DATA_TYPE_H
 
 #include <cstddef>
+#include <stdint.h>
+
+enum ESPNOW_Receive_Type {
+  AUTO_CONTROL,
+  GYRO_CONTROL,
+  DS4_CONTROL,
+};
 
 enum ESPNOW_DataType {
   GYRO_SENSOR_DATA,
@@ -9,7 +16,6 @@ enum ESPNOW_DataType {
   VACUUM_DATA,
 };
 
-/// @brief Gyroscope data from ESP-NOW
 struct GyroSensor_Data
 {
   uint8_t xAxisValue;    
@@ -23,13 +29,6 @@ struct SpeechRecognition_Data
   float hand;
   float on;
   float off;
-};
-
-/// @brief VR3 data from ESP-NOW
-struct Button_Data
-{
-  uint8_t button1;    
-  uint8_t button2;    
 };
 
 #endif 

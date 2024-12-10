@@ -9,6 +9,12 @@ enum ESPNOW_DataType {
   VACUUM_DATA,
 };
 
+enum ControlState {
+  AUTO_CONTROL,
+  GYRO_CONTROL,
+  DS4_CONTROL,
+};
+
 struct Vacuum_Data
 {
   uint8_t data;    

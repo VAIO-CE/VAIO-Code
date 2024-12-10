@@ -1,7 +1,8 @@
-#include "esp32-hal-gpio.h"
-#include "pins_arduino.h"
-#include <speech_recognition.h>
-#include <speech_recognition_inferencing.h>
+#include "speech_recognition.h"
+#include "speech_recognition_inferencing.h"
+
+#include <esp32-hal-gpio.h>
+#include <pins_arduino.h>
 
 #if !defined(EI_CLASSIFIER_SENSOR) ||                                          \
     EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_MICROPHONE
@@ -128,6 +129,15 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters) {
 
             esp_err_t esp_now_result =
                 esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
+
+              if (esp_now_result == ESP_OK) {
+                Serial.println("Sent voice data success");
+              }
+              else {
+                Serial.println("Error sending the voice data");
+              }
+
+              
       }
       else {
         digitalWrite(LED_BUILTIN, LOW );

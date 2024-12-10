@@ -1,15 +1,14 @@
 #ifndef GYROSENSOR_H
 #define GYROSENSOR_H
 
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
-#include <esp_now.h>
-#include <data_types.h>
-#include <constant.h>
-#include <pin.h>
+#include "data_types.h"
+#include "constant.h"
+#include "pin.h"
 
-// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
-// is used in I2Cdev.h
+#include <I2Cdev.h>
+#include <MPU6050_6Axis_MotionApps20.h>
+#include <esp_now.h>
+
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     #include "Wire.h"
 #endif

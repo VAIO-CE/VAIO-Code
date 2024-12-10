@@ -7,6 +7,7 @@
 
 #include <Preferences.h>
 #include <ps4Controller.h>
+#include <master_control.h>
 
 class DS4Control
 {
@@ -19,6 +20,7 @@ public:
     static void vTaskDS4Control(void *pvParameters);
     static void onConnect();
     static void onDisconnect();
+    static void rotateMotorFromDS4(int rightMotorSpeed, int leftMotorSpeed);
 };
 
 #endif
