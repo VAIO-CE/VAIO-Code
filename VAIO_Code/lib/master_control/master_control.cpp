@@ -1,7 +1,5 @@
 #include "master_control.h"
 
-uint8_t MasterControl::controlData[1] = {GYRO_CONTROL};
-TaskHandle_t MasterControl::controlTaskHandle = NULL;
 ControlState currentState = GYRO_CONTROL;
 ControlState prevState = currentState;
 

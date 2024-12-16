@@ -1,7 +1,4 @@
-#include <web_server.h>
-#include <routes/routes.h>
-
-AsyncWebServer WebServer::server(80);
+#include "web_server.h"
 
 void WebServer::WebListener()
 {

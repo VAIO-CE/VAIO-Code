@@ -25,8 +25,8 @@ private:
   static void handleSpeechCommand();
 
 public:
-  static uint8_t controlData[1];
-  static TaskHandle_t controlTaskHandle;
+  static inline uint8_t controlData[1]{GYRO_CONTROL};
+  static inline TaskHandle_t controlTaskHandle{NULL};
   static void setControlMode(ControlState mode);
   static void changeLEDIndicator(ControlState mode);
   static void ESPNOW_OnDataReceive(const uint8_t *mac, const uint8_t *incomingData, int len);

@@ -1,11 +1,4 @@
-#include "constants.h"
-#include "esp32-hal-ledc.h"
-#include "pin.h"
-#include <auto_control.h>
-
-Servo AutoControl::servo;
-int AutoControl::dutyCycle = MIN_SPEED_MOTOR + 25;
-float AutoControl::distance = 100.0f;
+#include "auto_control.h"
 
 void AutoControl::moveForward()
 {

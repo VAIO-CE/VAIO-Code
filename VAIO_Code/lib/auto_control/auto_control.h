@@ -10,8 +10,8 @@
 
 class AutoControl{
 private:
-    static int dutyCycle;
-    static float distance;
+    static constexpr int dutyCycle {MIN_SPEED_MOTOR+ 25};
+    static inline float distance {100.0f};
 
     static void moveForward();
     static void moveBackward();
@@ -24,7 +24,7 @@ private:
     static int lookLeft();
     static int readDistance();
 public:
-    static Servo servo;
+    static inline Servo servo {};
     static void vTaskAutoControl(void * pvParameters);
 };
 #endif

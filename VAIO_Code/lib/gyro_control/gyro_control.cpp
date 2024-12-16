@@ -1,7 +1,5 @@
 #include "gyro_control.h"
 
-struct GyroSensor_Data GyroControl::gyroSensor_Data;
-
 void GyroControl::vTaskGestureControl(void *pvParameters) {
   int threshold = 50;
 

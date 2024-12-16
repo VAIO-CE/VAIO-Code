@@ -1,7 +1,4 @@
-#include <ds4_control.h>
-
-ps4Controller DS4Control::ps4;
-Preferences DS4Control::preferences;
+#include "ds4_control.h"
 
 void DS4Control::initializePreferences()
 {

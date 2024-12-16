@@ -20,7 +20,7 @@
 class Setup
 {
 public:
-  static esp_now_peer_info_t peerInfo;
+  static inline esp_now_peer_info_t peerInfo{};
   static void Wifi();
   static void ESPNOW();
   static void WebServer();

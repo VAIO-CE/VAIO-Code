@@ -7,7 +7,7 @@
 #include <Arduino.h>
 class GyroControl{
 public:
-    static struct GyroSensor_Data gyroSensor_Data;
+    static inline struct GyroSensor_Data gyroSensor_Data{};
 
     static void vTaskGestureControl(void * pvParameters);
 };

@@ -12,8 +12,8 @@
 class DS4Control
 {
 public:
-    static ps4Controller ps4;
-    static Preferences preferences;
+    static inline ps4Controller ps4 {};
+    static inline Preferences preferences{};
 
     static void initializePreferences();
     static void vTaskDS4Setup(void *pvParameters);

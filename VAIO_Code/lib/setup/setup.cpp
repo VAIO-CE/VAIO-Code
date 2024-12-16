@@ -1,8 +1,4 @@
 #include "setup.h"
-#include "Arduino.h"
-#include "master_control.h"
-
-esp_now_peer_info_t Setup::peerInfo;
 
 void Setup::Wifi()
 {
