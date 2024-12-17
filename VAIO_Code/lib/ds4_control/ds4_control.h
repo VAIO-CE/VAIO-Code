@@ -1,26 +1,25 @@
 #ifndef DS4_CONTROL_H
 #define DS4_CONTROL_H
 
-#include "pin.h"
 #include "constants.h"
 #include "motor.h"
+#include "pin.h"
 
 #include <Preferences.h>
-#include <ps4Controller.h>
 #include <master_control.h>
+#include <ps4Controller.h>
 
-class DS4Control
-{
+class DS4Control {
+private:
+  static inline ps4Controller ps4{};
+  static inline Preferences preferences{};
+
+  static void onConnect();
+  static void onDisconnect();
+
 public:
-    static inline ps4Controller ps4 {};
-    static inline Preferences preferences{};
-
-    static void initializePreferences();
-    static void vTaskDS4Setup(void *pvParameters);
-    static void vTaskDS4Control(void *pvParameters);
-    static void onConnect();
-    static void onDisconnect();
-    static void rotateMotorFromDS4(int rightMotorSpeed, int leftMotorSpeed);
+  static void vTaskDS4Setup(void *pvParameters);
+  static void vTaskDS4Control(void *pvParameters);
 };
 
 #endif

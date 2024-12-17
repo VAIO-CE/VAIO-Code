@@ -98,7 +98,7 @@ int AutoControl::readDistance()
 
 void AutoControl::vTaskAutoControl(void *pvParameters)
 {
-
+  AutoControl autoControl;
   while (true)
   {
     int distanceR = 0;
@@ -110,32 +110,32 @@ void AutoControl::vTaskAutoControl(void *pvParameters)
     vTaskDelay(40 / portTICK_RATE_MS);
     if (distance <= 15)
     {
-      moveStop();
+      autoControl.moveStop();
       vTaskDelay(100 / portTICK_RATE_MS);
-      moveBackward();
+      autoControl.moveBackward();
       vTaskDelay(300 / portTICK_RATE_MS);
-      moveStop();
+      autoControl.moveStop();
       vTaskDelay(200 / portTICK_RATE_MS);
-      distanceR = lookRight();
+      distanceR = autoControl.lookRight();
       vTaskDelay(200 / portTICK_RATE_MS);
       vTaskDelay(200 / portTICK_RATE_MS);
-      distanceL = lookLeft();
+      distanceL = autoControl.lookLeft();
 
       if (distanceR >= distanceL)
       {
-        turnRight();
-        moveStop();
+        autoControl.turnRight();
+        autoControl.moveStop();
       }
       else
       {
-        turnLeft();
-        moveStop();
+        autoControl.turnLeft();
+        autoControl.moveStop();
       }
     }
     else
     {
-      moveForward();
+      autoControl.moveForward();
     }
-    distance = readDistance();
+    distance = autoControl.readDistance();
   }
 }

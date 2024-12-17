@@ -13,10 +13,6 @@ void MasterControl::ESPNOW_OnDataSent(const uint8_t *mac_addr, esp_now_send_stat
     Serial.println("Resending Packet to Glove...");
     esp_now_send(GloveAddress, (uint8_t *)&controlData, sizeof(controlData));
   }
-  else
-  {
-    Serial.println("ESPNow Delivery --> Glove: Success");
-  }
 }
 
 void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
@@ -40,7 +36,6 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   case SPEECH_DATA:
     memcpy(&MasterControl::speechRecognition_Data, data,
            sizeof(SpeechRecognition_Data));
-    Serial.println("Speech Data Received");
     handleSpeechCommand();
     break;
   case VACUUM_DATA:
@@ -49,22 +44,16 @@ void MasterControl::ESPNOW_OnDataReceive(const uint8_t *mac,
   default:
     Serial.println("Unknown Data\n");
   }
-
-  char *taskName = pcTaskGetTaskName(MasterControl::controlTaskHandle);
-  printf("Control Changed to : %s\n", taskName);
 }
 
 void MasterControl::handleVacuumToggle(const uint8_t *data)
 {
-  Serial.print("test_sent");
   if (data[0] == 0x01)
   {
-    Serial.println("Turn Off Vacuum");
     digitalWrite(vacuumPin, LOW);
   }
   else if (data[0] == 0x02)
   {
-    Serial.println("Turn On Vacuum");
     digitalWrite(vacuumPin, HIGH);
   }
 }
@@ -72,11 +61,6 @@ void MasterControl::handleVacuumToggle(const uint8_t *data)
 void MasterControl::setControlMode(ControlState mode)
 {
   Motor::rotateMotor(0, 0);
-
-  // if (prevState == ControlState::DS4_CONTROL)
-  // {
-  //   DS4Control::ps4.end();
-  // }
 
   switch (mode)
   {
@@ -95,17 +79,14 @@ void MasterControl::setControlMode(ControlState mode)
   case ControlState::DS4_CONTROL:
     controlData[0] = DS4_CONTROL;
     vTaskDelete(controlTaskHandle);
-    Serial.println("Ganti");
     xTaskCreatePinnedToCore(DS4Control::vTaskDS4Setup, "DS4 Task Setup",
                             STACK_SIZE * 2, NULL, 1, NULL, 0);
     // xTaskCreatePinnedToCore(DS4Control::vTaskDS4Control, "DS4 Control",
     //                         2 * STACK_SIZE, NULL, 1, &controlTaskHandle, 0);
-    Serial.println("Tahap 4");
     break;
   }
 
   currentState = mode;
-  Serial.println("Send Change State to Glove");
   esp_now_send(GloveAddress, (uint8_t *)&controlData,
                sizeof(controlData)); // Send state changes to Glove
 }

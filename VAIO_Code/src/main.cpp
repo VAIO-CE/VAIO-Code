@@ -1,8 +1,7 @@
 #include "setup.h"
-#include <Arduino.h>
+#define CONFIG_ESPTOOLPY_FLASHFREQ CONFIG_ESPTOOLPY_FLASHFREQ_80M
 
-void setup()
-{
+void setup() {
   Serial.begin(115200);
 
   Setup::Wifi();
@@ -12,16 +11,10 @@ void setup()
   Setup::Motors();
   Setup::Ultrasonic();
   Setup::Servo();
-  // Setup::DS4();
-  pinMode(vacuumPin, OUTPUT);
-  digitalWrite(vacuumPin, HIGH);
+  Setup::DS4();
   Setup::InitialTask();
 
   vTaskDelete(NULL);
 }
 
-void loop()
-{
-  // char *taskName = pcTaskGetTaskName(MasterControl::controlTaskHandle);
-  // printf("Control Changed to : %s\n", taskName);
-}
+void loop() {}
