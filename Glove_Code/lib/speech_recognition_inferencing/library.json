@@ -1,0 +1,7 @@
+{
+  "name": "speech_recognition_inferencing",
+  "version": "1.0.74",
+  "description": "Arduino library for running machine learning models",
+  "frameworks": "arduino",
+  "platforms": "*"
+}

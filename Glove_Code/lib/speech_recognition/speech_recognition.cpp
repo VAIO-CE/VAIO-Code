@@ -1,32 +1,12 @@
+#define SPEECH_USE_ONLY 
 #include "speech_recognition.h"
-#include "speech_recognition_inferencing.h"
-
-#include <esp32-hal-gpio.h>
-#include <pins_arduino.h>
 
 #if !defined(EI_CLASSIFIER_SENSOR) ||                                          \
     EI_CLASSIFIER_SENSOR != EI_CLASSIFIER_SENSOR_MICROPHONE
 #error "Invalid model for current sensor."
 #endif
 
-#define EIDSP_QUANTIZE_FILTERBANK 0
-#define EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW 2
-#undef PRINT_DEBUG
-
-struct SpeechRecognition_Data SpeechRecognition::speechRecognition_Data;
-SpeechRecognition::inference_t SpeechRecognition::inference;
-signed short
-    SpeechRecognition::sampleBuffer[SpeechRecognition::sample_buffer_size];
-int SpeechRecognition::print_results = -(EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW);
-bool SpeechRecognition::record_status = true;
-bool SpeechRecognition::recording_started = false;
-bool SpeechRecognition::send_esp_now = false;
-
 void SpeechRecognition::setupSpeechRecognition() {
-// put your setup code here, to run once:
-// Serial.begin(115200);
-// comment out the below line to cancel the wait for USB connection (needed for
-// native USB) while (!Serial); Serial.println("Edge Impulse Inferencing Demo");
 
 // summary of inferencing settings (from model_metadata.h)
 #ifdef PRINT_DEBUG
@@ -42,18 +22,15 @@ void SpeechRecognition::setupSpeechRecognition() {
 #endif
 
   run_classifier_init();
-  ei_printf("\nStarting continious inference in 2 seconds...\n");
-  ei_sleep(2000);
+  ei_sleep(1000);
 
-  if (SpeechRecognition::microphone_inference_start(EI_CLASSIFIER_SLICE_SIZE) ==
-      false) {
+  if (SpeechRecognition::microphone_inference_start(EI_CLASSIFIER_SLICE_SIZE) == false) {
     ei_printf("ERR: Could not allocate audio buffer (size %d), this could be "
               "due to the window length of your model\r\n",
               EI_CLASSIFIER_RAW_SAMPLE_COUNT);
     return;
   }
 
-  ei_printf("Recording...\n");
   recording_started = true;
 }
 void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters) {
@@ -75,20 +52,6 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters) {
         ei_printf("ERR: Failed to run classifier (%d)\n", r);
         return;
       }
-      // inference result
-      if (result.classification[2].value > 0.6) {
-        Serial.print("Heard: Control -> ");
-        Serial.println(result.classification[2].value);
-      }
-      if (result.classification[3].value > 0.6) {
-        Serial.print("Heard: Hand ->");
-        Serial.println(result.classification[3].value);
-      }
-      if (result.classification[4].value > 0.6) {
-        Serial.print("Heard: Move ->");
-        Serial.println(result.classification[4].value);
-      }
-// if (++print_results >= (EI_CLASSIFIER_SLICES_PER_MODEL_WINDOW)) {
 // print the predictions
 #ifdef PRINT_DEBUG
       ei_printf("Predictions ");
@@ -112,38 +75,31 @@ void SpeechRecognition::vTaskSpeechRecognition(void *pvParameters) {
       // print_results = 0;
       // }
 
-      int reading =
-          digitalRead(voice_button_pin); 
-      if (reading == HIGH){
-            digitalWrite(LED_BUILTIN, HIGH);
-            speechRecognition_Data.move = result.classification[4].value;
-            speechRecognition_Data.control = result.classification[2].value;
-            speechRecognition_Data.hand = result.classification[3].value;
-            speechRecognition_Data.on = result.classification[6].value;
-            speechRecognition_Data.off = result.classification[5].value;
+      int reading = digitalRead(voice_button_pin);
+      if (reading == HIGH) {
+        digitalWrite(LED_BUILTIN, HIGH);
+        speechRecognition_Data.move = result.classification[4].value;
+        speechRecognition_Data.control = result.classification[2].value;
+        speechRecognition_Data.hand = result.classification[3].value;
+        speechRecognition_Data.on = result.classification[6].value;
+        speechRecognition_Data.off = result.classification[5].value;
 
-            uint8_t data[1 + sizeof(SpeechRecognition_Data)];
-            data[0] = SPEECH_DATA; // Header byte to identify the data type
-            memcpy(data + 1, &speechRecognition_Data,
-                   sizeof(SpeechRecognition_Data));
+        uint8_t data[1 + sizeof(SpeechRecognition_Data)];
+        data[0] = SPEECH_DATA; // Header byte to identify the data type
+        memcpy(data + 1, &speechRecognition_Data,
+               sizeof(SpeechRecognition_Data));
 
-            esp_err_t esp_now_result =
-                esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
+        esp_err_t esp_now_result =
+            esp_now_send(broadcastAddress, (uint8_t *)&data, sizeof(data));
 
-              if (esp_now_result == ESP_OK) {
-                Serial.println("Sent voice data success");
-              }
-              else {
-                Serial.println("Error sending the voice data");
-              }
+        if (esp_now_result != ESP_OK)
+          Serial.println("Error sending the voice data");
 
-              
+        else
+          digitalWrite(LED_BUILTIN, LOW);
       }
-      else {
-        digitalWrite(LED_BUILTIN, LOW );
-      }
+      vTaskDelay(portTICK_PERIOD_MS / 10);
     }
-    vTaskDelay(portTICK_PERIOD_MS / 10);
   }
 }
 
@@ -193,28 +149,13 @@ void SpeechRecognition::capture_samples(void *arg) {
   vTaskDelete(NULL);
 }
 
-/**
- * @brief      Init inferencing struct and setup/start PDM
- *
- * @param[in]  n_samples  The n samples
- *
- * @return     { description_of_the_return_value }
- */
 bool SpeechRecognition::microphone_inference_start(uint32_t n_samples) {
   inference.buffers[0] =
       (signed short *)malloc(n_samples * sizeof(signed short));
-
-  if (inference.buffers[0] == NULL) {
-    return false;
-  }
-
   inference.buffers[1] =
       (signed short *)malloc(n_samples * sizeof(signed short));
-
-  if (inference.buffers[1] == NULL) {
-    ei_free(inference.buffers[0]);
-    return false;
-  }
+  // inference.buffers[0] = inferenceBuffer1;
+  // inference.buffers[1] = inferenceBuffer2;
 
   inference.buf_select = 0;
   inference.buf_count = 0;

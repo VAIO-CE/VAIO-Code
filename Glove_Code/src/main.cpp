@@ -1,4 +1,3 @@
-#include "constant.h"
 #include "setup.h"
 
 void setup()
@@ -11,13 +10,12 @@ void setup()
   Setup::Buttons();
   Setup::SpeechRecognition();
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 5; i++)
   {
     digitalWrite(LED_BUILTIN, HIGH);
-    delay(200);
+    delay(100);
     digitalWrite(LED_BUILTIN, LOW);
-    delay(200);
-    Serial.println("Jalan");
+    delay(100);
   }
 
   Setup::InitialTask();

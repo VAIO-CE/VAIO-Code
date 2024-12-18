@@ -1,7 +1,5 @@
 #include "setup.h"
 
-esp_now_peer_info_t Setup::peerInfo;
-
 void Setup::ESPNOW() {
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
@@ -26,8 +24,6 @@ void Setup::ESPNOW() {
   // Receive data from ESP-NOW
   esp_now_register_recv_cb(
       esp_now_recv_cb_t(StateControl::ESPNOW_OnDataReceive));
- // esp_now_register_recv_cb(
- //     esp_now_recv_cb_t(ESPNOW_OnDataReceive));
 }
 
 void Setup::MPU6050() {
@@ -117,16 +113,6 @@ void Setup::Buttons() {
 void Setup::SpeechRecognition() { SpeechRecognition::setupSpeechRecognition(); }
 
 void Setup::InitialTask() {
-
-  //  xTaskCreatePinnedToCore(
-  //    Vacuum::vTaskVacuumControl,
-  //    "Vacuumh Control",
-  //    STACK_SIZE, // Stack
-  //    NULL, // Parameter to pass function
-  //    1, // Task Priority
-  //    NULL, // Task Handle
-  //    0 // CPU core
-  //  );
 
     xTaskCreatePinnedToCore(
       SpeechRecognition::vTaskSpeechRecognition,
